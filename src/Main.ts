@@ -1,5 +1,6 @@
 import * as fse from "fs-extra";
 import * as path from "path";
+import Interpreter from "./Interpreter";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -12,7 +13,9 @@ export default class Main {
 	}
 
 	public processFile(value: string) {
-		process.stdout.write(value);
+		const interpreter = new Interpreter(value);
+		const result = interpreter.expr();
+		console.log(result);
 	}
 }
 

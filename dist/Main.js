@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var fse = require("fs-extra");
 var path = require("path");
+var Interpreter_1 = require("./Interpreter");
 var Main = (function () {
     function Main() {
     }
@@ -14,7 +15,9 @@ var Main = (function () {
         }
     };
     Main.prototype.processFile = function (value) {
-        process.stdout.write(value);
+        var interpreter = new Interpreter_1.default(value);
+        var result = interpreter.expr();
+        console.log(result);
     };
     return Main;
 }());
