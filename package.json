@@ -1,0 +1,29 @@
+{
+  "name": "interpreter",
+  "version": "1.0.0",
+  "description": "A simple interpreter made for fun",
+  "main": "dist/index.js",
+  "bin": {
+    "ciber": "dist/index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jhm-ciberman/interpreter.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jhm-ciberman/interpreter/issues"
+  },
+  "homepage": "https://github.com/jhm-ciberman/interpreter#readme",
+  "devDependencies": {
+    "@types/fs-extra": "^5.0.0",
+    "typescript": "^2.7.1"
+  },
+  "dependencies": {
+    "fs-extra": "^5.0.0"
+  }
+}
