@@ -2,11 +2,11 @@ import { TokenType } from "./TokenType";
 
 export default class Token {
 
-	public type: TokenType;
+	public readonly type: TokenType;
 
-	public value: any;
+	public readonly value: string;
 
-	public constructor(type: TokenType, value: any) {
+	public constructor(type: TokenType, value: string) {
 		this.type = type;
 		this.value = value;
 	}
