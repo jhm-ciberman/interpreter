@@ -12,6 +12,8 @@ import ASTDivision from "../ast/binop/ASTDivision";
 import ASTAddition from "../ast/binop/ASTAddition";
 import ASTSubstraction from "../ast/binop/ASTSubstraction";
 import ASTMultiplication from "../ast/binop/ASTMultiplication";
+import ASTUnaryPlus from "../ast/unaryop/ASTUnaryPlus";
+import ASTUnaryMinus from "../ast/unaryop/ASTUnaryMinus";
 
 export default class Parser {
 
@@ -46,10 +48,14 @@ export default class Parser {
 	}
 
 	/**
-	 * factor : INTEGER | LPAREN expr RPAREN
+	 * factor : (PLUS | MINUS) factor | INTEGER | LPAREN expr RPAREN
 	 */
 	private _factor(): AST {
 		switch (this._currentToken.type) {
+			case TokenType.PLUS:
+				return new ASTUnaryPlus(this._eat(TokenType.PLUS), this._expr());
+			case TokenType.MINUS:
+				return new ASTUnaryMinus(this._eat(TokenType.MINUS), this._expr());
 			case TokenType.INTEGER: 
 				return new ASTInt(this._eat(TokenType.INTEGER));
 			case TokenType.LPARENT:

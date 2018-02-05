@@ -13,9 +13,7 @@ export default abstract class ASTBinOp extends AST {
 	}
 
 	public log(level: number): string {
-		let str = super.log(level);
-		str += this.expr.log(level + 1);
-		return str;
+		return super.log(level) + this.expr.log(level + 1);
 	}
 
 }

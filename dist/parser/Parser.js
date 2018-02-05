@@ -7,6 +7,8 @@ const ASTDivision_1 = require("../ast/binop/ASTDivision");
 const ASTAddition_1 = require("../ast/binop/ASTAddition");
 const ASTSubstraction_1 = require("../ast/binop/ASTSubstraction");
 const ASTMultiplication_1 = require("../ast/binop/ASTMultiplication");
+const ASTUnaryPlus_1 = require("../ast/unaryop/ASTUnaryPlus");
+const ASTUnaryMinus_1 = require("../ast/unaryop/ASTUnaryMinus");
 class Parser {
     constructor(lexer) {
         this._lexer = lexer;
@@ -27,6 +29,10 @@ class Parser {
     }
     _factor() {
         switch (this._currentToken.type) {
+            case TokenType_1.default.PLUS:
+                return new ASTUnaryPlus_1.default(this._eat(TokenType_1.default.PLUS), this._expr());
+            case TokenType_1.default.MINUS:
+                return new ASTUnaryMinus_1.default(this._eat(TokenType_1.default.MINUS), this._expr());
             case TokenType_1.default.INTEGER:
                 return new ASTInt_1.default(this._eat(TokenType_1.default.INTEGER));
             case TokenType_1.default.LPARENT:

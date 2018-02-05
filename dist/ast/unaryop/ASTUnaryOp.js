@@ -7,9 +7,7 @@ class ASTBinOp extends AST_1.default {
         this.expr = expr;
     }
     log(level) {
-        let str = super.log(level);
-        str += this.expr.log(level + 1);
-        return str;
+        return super.log(level) + this.expr.log(level + 1);
     }
 }
 exports.default = ASTBinOp;
