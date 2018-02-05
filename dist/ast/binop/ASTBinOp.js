@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const AST_1 = require("../AST");
 class ASTBinOp extends AST_1.default {
-    constructor(left, op, right) {
-        super(op);
+    constructor(left, right) {
+        super();
         this.left = left;
         this.right = right;
     }

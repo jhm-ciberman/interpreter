@@ -9,8 +9,8 @@ export default abstract class ASTBinOp extends AST {
 
 	public right: AST;
 
-	constructor(left: AST, op: Token, right: AST) {
-		super(op);
+	constructor(left: AST, right: AST) {
+		super();
 		this.left = left;
 		this.right = right;
 	}

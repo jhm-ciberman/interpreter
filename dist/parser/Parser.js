@@ -9,70 +9,113 @@ const ASTSubstraction_1 = require("../ast/binop/ASTSubstraction");
 const ASTMultiplication_1 = require("../ast/binop/ASTMultiplication");
 const ASTUnaryPlus_1 = require("../ast/unaryop/ASTUnaryPlus");
 const ASTUnaryMinus_1 = require("../ast/unaryop/ASTUnaryMinus");
+const ASTCompound_1 = require("../ast/ASTCompound");
 class Parser {
     constructor(lexer) {
         this._lexer = lexer;
-        this._currentToken = this._lexer.getNextToken();
+        this._t = this._lexer.getNextToken();
     }
     parse() {
-        return this._expr();
+        return this._program();
     }
-    _eat(type) {
-        if (this._currentToken.type == type) {
-            const t = this._currentToken;
-            this._currentToken = this._lexer.getNextToken();
-            return t;
+    _expect(type) {
+        if (!this._accept(type)) {
+            throw new SyntaxError_1.default(this._t, [type]);
         }
-        else {
-            throw new SyntaxError_1.default(this._currentToken, [type]);
+    }
+    _accept(type) {
+        if (this._t.type == type) {
+            this._prev = this._t;
+            this._t = this._lexer.getNextToken();
+            return true;
         }
+        return false;
     }
     _factor() {
-        switch (this._currentToken.type) {
-            case TokenType_1.default.PLUS:
-                return new ASTUnaryPlus_1.default(this._eat(TokenType_1.default.PLUS), this._expr());
-            case TokenType_1.default.MINUS:
-                return new ASTUnaryMinus_1.default(this._eat(TokenType_1.default.MINUS), this._expr());
-            case TokenType_1.default.INTEGER:
-                return new ASTInt_1.default(this._eat(TokenType_1.default.INTEGER));
-            case TokenType_1.default.LPARENT:
-                this._eat(TokenType_1.default.LPARENT);
-                const expr = this._expr();
-                this._eat(TokenType_1.default.RPARENT);
-                return expr;
-            default:
-                throw new SyntaxError_1.default(this._currentToken, [TokenType_1.default.INTEGER]);
+        if (this._accept(TokenType_1.default.PLUS)) {
+            return new ASTUnaryPlus_1.default(this._expr());
+        }
+        else if (this._accept(TokenType_1.default.MINUS)) {
+            return new ASTUnaryMinus_1.default(this._expr());
+        }
+        else if (this._accept(TokenType_1.default.INTEGER)) {
+            return new ASTInt_1.default(this._prev.value);
+        }
+        else if (this._accept(TokenType_1.default.LPAREN)) {
+            const expr = this._expr();
+            this._expect(TokenType_1.default.RPAREN);
+            return expr;
+        }
+        else {
+            throw new SyntaxError_1.default(this._t, [
+                TokenType_1.default.PLUS,
+                TokenType_1.default.MINUS,
+                TokenType_1.default.INTEGER,
+                TokenType_1.default.LPAREN,
+            ]);
         }
     }
     _term() {
         let node = this._factor();
-        for (;;) {
-            switch (this._currentToken.type) {
-                case TokenType_1.default.MULTIPLY:
-                    node = new ASTMultiplication_1.default(node, this._eat(TokenType_1.default.MULTIPLY), this._factor());
-                    continue;
-                case TokenType_1.default.DIVISION:
-                    node = new ASTDivision_1.default(node, this._eat(TokenType_1.default.DIVISION), this._factor());
-                    continue;
+        while (true) {
+            if (this._accept(TokenType_1.default.MULTIPLY)) {
+                node = new ASTMultiplication_1.default(node, this._factor());
             }
-            break;
+            else if (this._accept(TokenType_1.default.DIVISION)) {
+                node = new ASTDivision_1.default(node, this._factor());
+            }
+            else {
+                break;
+            }
         }
         return node;
     }
     _expr() {
         let node = this._term();
-        for (;;) {
-            switch (this._currentToken.type) {
-                case TokenType_1.default.PLUS:
-                    node = new ASTAddition_1.default(node, this._eat(TokenType_1.default.PLUS), this._term());
-                    continue;
-                case TokenType_1.default.MINUS:
-                    node = new ASTSubstraction_1.default(node, this._eat(TokenType_1.default.MINUS), this._term());
-                    continue;
+        while (true) {
+            if (this._accept(TokenType_1.default.PLUS)) {
+                node = new ASTAddition_1.default(node, this._term());
             }
-            break;
+            else if (this._accept(TokenType_1.default.MINUS)) {
+                node = new ASTSubstraction_1.default(node, this._term());
+            }
+            else {
+                break;
+            }
         }
         return node;
+    }
+    _block() {
+        const arr = [];
+        this._expect(TokenType_1.default.LBRACE);
+        while (!this._accept(TokenType_1.default.RBRACE)) {
+            const s = this._statement();
+            if (s) {
+                arr.push(s);
+            }
+        }
+        return new ASTCompound_1.default(arr);
+    }
+    _statement() {
+        if (this._accept(TokenType_1.default.SEMI) || this._accept(TokenType_1.default.EOL)) {
+            return null;
+        }
+        else if (this._t.type == TokenType_1.default.LBRACE) {
+            return this._block();
+        }
+        else {
+            return this._expr();
+        }
+    }
+    _program() {
+        const arr = [];
+        while (!this._accept(TokenType_1.default.EOF)) {
+            const s = this._statement();
+            if (s) {
+                arr.push(s);
+            }
+        }
+        return new ASTCompound_1.default(arr);
     }
 }
 exports.default = Parser;

@@ -4,16 +4,33 @@ import Char from "./Char";
 
 export default class Lexer {
 
-	private _currentChar: string;
+	/**
+	 * Current char
+	 */
+	private _cc: string;
 
 	private _pos: number;
 
 	private readonly _text: string;
 
+	private _tokenMap: Map<string, Token> = new Map();
+
 	constructor(text: string) {
-		this._pos = 0;
+		this._pos = -1;
 		this._text = text;
-		this._currentChar = this._text[this._pos];
+		this._advance();
+
+		this._tokenMap
+			.set("\n", new Token(TokenType.EOL))
+			.set(";", new Token(TokenType.SEMI))
+			.set("+", new Token(TokenType.PLUS))
+			.set("-", new Token(TokenType.MINUS))
+			.set("*", new Token(TokenType.MULTIPLY))
+			.set("/", new Token(TokenType.DIVISION))
+			.set("(", new Token(TokenType.LPAREN))
+			.set(")", new Token(TokenType.RPAREN))
+			.set("{", new Token(TokenType.LBRACE))
+			.set("}", new Token(TokenType.RBRACE))
 	}
 
 	/**
@@ -22,42 +39,40 @@ export default class Lexer {
 	 * apart into tokens.
 	 */
 	public getNextToken(): Token {
-		// Skip whitespace
-		while (this._currentChar !== '' && Char.isWhitespace(this._currentChar)) {
-			this._advance();
+		if (this._cc == "") {
+			return new Token(TokenType.EOF);
 		}
+		// Skip whitespace and comments 
+		this._skipCommentsAndWhitespace();
 
-		const c = this._currentChar;
+		const c = this._cc;
 		if (Char.isDigit(c)) {
 			return new Token(TokenType.INTEGER, this._integer());
 		} else {
 			let t: Token;
-			switch (c) {
-				case "+": t = new Token(TokenType.PLUS, c); break;
-				case "-": t = new Token(TokenType.MINUS, c); break;
-				case "*": t = new Token(TokenType.MULTIPLY, c); break;
-				case "/": t = new Token(TokenType.DIVISION, c); break;
-				case "(": t = new Token(TokenType.LPARENT, c); break;
-				case ")": t = new Token(TokenType.RPARENT, c); break;
-				case "": t = new Token(TokenType.EOF, c); break;
-				default:
-					throw new Error(`Invalid character "${ c }" at position ${ this._pos }`);
+			if (this._tokenMap.has(c)) {
+				this._advance();
+				return this._tokenMap.get(c) as Token;
+			} else {
+				throw new Error(`Invalid character "${ c }" at position ${ this._pos }`);
 			}
-			this._advance();
-			return t;
 		}
 	}
 
 	/**
 	 * Advance the 'pos' pointer and set the 'current_char' variable.
 	 */
-	private _advance(): void {
+	private _advance(): string {
 		this._pos++;
-		if (this._pos > this._text.length - 1) {
-			this._currentChar = "";
-		} else {
-			this._currentChar = this._text[this._pos]
-		}
+		this._cc = (this._pos > this._text.length - 1) ? "" : this._text[this._pos];		
+		return this._cc;
+	}
+
+	/**
+	 * return the next character from the text buffer without incrementing the current position
+	 */
+	private _peek(n = 1): string {
+		return (this._pos + n > this._text.length - 1) ? "" : this._text[this._pos + n];
 	}
 
 	/**
@@ -65,10 +80,54 @@ export default class Lexer {
 	 */
 	private _integer(): string {
 		let result = '';
-		while (this._currentChar !== "" && Char.isDigit(this._currentChar)) {
-			result += this._currentChar;
+		while (this._cc !== '' && Char.isDigit(this._cc)) {
+			result += this._cc;
 			this._advance();
 		}
 		return result;
+	}
+
+	/**
+	 * Skips all comments and whitespace characters
+	 */
+	private _skipCommentsAndWhitespace() {
+		while (this._cc !== '' && Char.isWhitespace(this._cc)) {
+			this._advance();
+		}
+		if (this._cc == "/") {
+			switch (this._peek()) {
+				case '/':
+					this._advance();
+					this._skipDoubleSlashComment();
+					this._skipCommentsAndWhitespace();
+					break;
+				case '*':
+					this._advance();
+					this._skipMultilineComment()
+					this._skipCommentsAndWhitespace();
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Skips a detected multiline comment.
+	 */
+	private _skipMultilineComment() {
+		do {
+			this._advance();
+		} while (this._cc !== '' && this._cc !== '*' && this._peek() !== '/')
+		this._advance();
+		this._advance();
+	}
+
+	/**
+	 * Skips a detected double slash comment.
+	 */
+	private _skipDoubleSlashComment() {
+		do {
+			this._advance();
+		} while (this._cc !== '\n' && this._cc !== '')
+		this._advance();
 	}
 }

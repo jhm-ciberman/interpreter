@@ -3,12 +3,12 @@ import ASTInt from "../ASTInt";
 import Token from "../../Lexer/Token";
 import { TokenType } from "../../Lexer/TokenType";
 
-export default abstract class ASTBinOp extends AST {
+export default abstract class ASTUnaryOp extends AST {
 
 	public expr: AST;
 
-	constructor(op: Token, expr: AST) {
-		super(op);
+	constructor(expr: AST) {
+		super();
 		this.expr = expr;
 	}
 

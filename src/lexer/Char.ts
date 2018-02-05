@@ -4,7 +4,7 @@ export default class Char {
 	}
 
 	public static isWhitespace(char: string): boolean {
-		return ([' ', '\t'].indexOf(char) !== -1);
+		return ([' ', '\t', '\r'].indexOf(char) !== -1);
 	}
 
 }

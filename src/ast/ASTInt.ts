@@ -5,9 +5,9 @@ export default class ASTInt extends AST {
 	
 	public value: number;
 
-	constructor(token: Token) {
-		super(token);
-		this.value = parseInt(this.token.value);
+	constructor(value: string) {
+		super();
+		this.value = parseInt(value);
 	}
 
 	public eval(): number {
@@ -15,6 +15,6 @@ export default class ASTInt extends AST {
 	}
 
 	public log(level: number): string {
-		return "  ".repeat(level) + this.constructor.name + "(" + this.token.type + ") = " + this.value + "\n";
+		return super.log(level).replace("\n", " = " + this.value + "\n");
 	};
 }
