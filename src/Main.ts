@@ -23,7 +23,7 @@ export default class Main {
 		const ast = parser.parse();
 		console.log("AST: ");
 		console.log(ast.log(1));
-		const result = ast.visit();
+		const result = ast.eval();
 		console.log("OUTPUT:");
 		console.log(result);
 	}

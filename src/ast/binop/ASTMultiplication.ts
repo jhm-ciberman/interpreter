@@ -4,7 +4,7 @@ import Token from "../../Lexer/Token";
 
 export default class ASTMultiplication extends ASTBinOp {
 
-	public visit(): number {
-		return this.left.visit() * this.right.visit();
+	public eval(): number {
+		return this.left.eval() * this.right.eval();
 	}
 }

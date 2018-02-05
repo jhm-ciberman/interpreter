@@ -10,7 +10,7 @@ export default class ASTInt extends AST {
 		this.value = parseInt(this.token.value);
 	}
 
-	public visit(): number {
+	public eval(): number {
 		return this.value;
 	}
 

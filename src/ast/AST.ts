@@ -7,7 +7,7 @@ export default abstract class AST {
 		this.token = token;
 	}
 
-	public abstract visit(): any;
+	public abstract eval(): any;
 
 	public log(level: number): string {
 		return "  ".repeat(level) + this.constructor.name + "(" + this.token.type + ") \n";

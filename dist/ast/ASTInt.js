@@ -6,7 +6,7 @@ class ASTInt extends AST_1.default {
         super(token);
         this.value = parseInt(this.token.value);
     }
-    visit() {
+    eval() {
         return this.value;
     }
     log(level) {
