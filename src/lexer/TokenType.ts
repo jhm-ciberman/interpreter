@@ -12,15 +12,24 @@ export enum TokenType {
 	PLUS = "PLUS",
 	MINUS = "MINUS",
 
+	LT = "LT",
+	LTEQ = "LTEQ",
+	GT = "GT",
+	GTEQ = "GTEQ",
+	EQ = "EQ",
+	NOTEQ = "NOTEQ",
+	
+	COLON = "COLON",
 	SEMI = "SEMI",
 	ID = "ID",
-	EQUAL = "EQUAL",
+	ASSIGN = "ASSIGN",
 	
 	IF = "IF",
+	ELSE = "ELSE",
+	WHILE = "WHILE",
 	VAR = "VAR",
 
 	EOF = "EOF",
-	EOL = "EOL",
 }
 
 export default TokenType;

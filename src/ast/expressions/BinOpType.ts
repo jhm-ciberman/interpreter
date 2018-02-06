@@ -3,5 +3,11 @@ export const enum BinOpType {
 	SUBSTRACTION,
 	MULTIPLICATION,
 	DIVISION,
+	LT,
+	LTEQ,
+	GT,
+	GTEQ,
+	EQ,
+	NOTEQ,
 }
 export default BinOpType;

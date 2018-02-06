@@ -15,34 +15,35 @@ export default class Lexer {
 
 	private readonly _text: string;
 
-	private _tokenMap: Map<string, Token> = new Map();
+	private _tokenMap: Map<string, TokenType> = new Map();
 
-	private _reservedKeywords: Map<string, Token> = new Map();
+	private _reservedKeywords: Map<string, TokenType> = new Map();
 
 	constructor(text: string) {
 		this._cc = '';
 		this._pos = -1;
 		this._line = 1;
-		this._col = 1;
+		this._col = -1;
 		this._text = text;
 		this._advance();
 
 		this._tokenMap
-			.set("\n", new Token(TokenType.EOL))
-			.set(";", new Token(TokenType.SEMI))
-			.set("+", new Token(TokenType.PLUS))
-			.set("-", new Token(TokenType.MINUS))
-			.set("*", new Token(TokenType.MULTIPLY))
-			.set("/", new Token(TokenType.DIVISION))
-			.set("(", new Token(TokenType.LPAREN))
-			.set(")", new Token(TokenType.RPAREN))
-			.set("{", new Token(TokenType.LBRACE))
-			.set("}", new Token(TokenType.RBRACE))
-			.set("=", new Token(TokenType.EQUAL));
+			.set(";", TokenType.SEMI)
+			.set("+", TokenType.PLUS)
+			.set("-", TokenType.MINUS)
+			.set("*", TokenType.MULTIPLY)
+			.set("/", TokenType.DIVISION)
+			.set("(", TokenType.LPAREN)
+			.set(")", TokenType.RPAREN)
+			.set("{", TokenType.LBRACE)
+			.set("}", TokenType.RBRACE)
+			.set(":", TokenType.COLON)
 
 		this._reservedKeywords
-			.set("var", new Token(TokenType.VAR))
-			.set("if", new Token(TokenType.IF));
+			.set("var", TokenType.VAR)
+			.set("if", TokenType.IF)
+			.set("else", TokenType.ELSE)
+			.set("while", TokenType.WHILE);
 	}
 
 	/**
@@ -54,8 +55,8 @@ export default class Lexer {
 		// Skip whitespace and comments 
 		this._skipCommentsAndWhitespace();
 
-		if (this._cc == '') {
-			return new Token(TokenType.EOF);
+		if (this._cc === '') {
+			return new Token(this._line, this._col, TokenType.EOF);
 		}
 
 		if (Char.isDigit(this._cc)) {
@@ -64,12 +65,42 @@ export default class Lexer {
 		if (Char.isAlpha(this._cc)) {
 			return this._id();
 		}
+		
+		if (this._cc === '<') {
+			this._advance();
+			if ((this._cc as string) === '=') {
+				this._advance();
+				return new Token(this._line, this._col, TokenType.LTEQ);
+			} else {
+				return new Token(this._line, this._col, TokenType.LT);
+			}
+		}
+
+		if (this._cc === '>') {
+			this._advance();
+			if ((this._cc as string) === '=') {
+				this._advance();
+				return new Token(this._line, this._col, TokenType.GTEQ);
+			} else {
+				return new Token(this._line, this._col, TokenType.GT);
+			}
+		}
+
+		if (this._cc === '=') {
+			this._advance();
+			if ((this._cc as string) === '=') {
+				this._advance();
+				return new Token(this._line, this._col, TokenType.EQ);
+			} else {
+				return new Token(this._line, this._col, TokenType.ASSIGN);
+			}
+		}
 
 		let t: Token;
 		const token = this._tokenMap.get(this._cc);
-		if (token) {
+		if (token !== undefined) {
 			this._advance();
-			return token as Token;
+			return new Token(this._line, this._col, token, this._cc);
 		} else {
 			throw new Error(`Invalid character "${ this._cc }" at line ${ this._line } col ${ this._col }`);
 		}
@@ -81,19 +112,20 @@ export default class Lexer {
 	private _advance(): string {
 		if (this._cc === '\n') {
 			this._line++;
-			this._col = 0;
+			this._col = -1;
 		}
+		
 		this._pos++;
 		this._col++;
-		this._cc = (this._pos > this._text.length - 1) ? "" : this._text[this._pos];		
+		this._cc = (this._pos > this._text.length - 1) ? "" : this._text[this._pos];
 		return this._cc;
 	}
 
 	/**
 	 * return the next character from the text buffer without incrementing the current position
 	 */
-	private _peek(n = 1): string {
-		return (this._pos + n > this._text.length - 1) ? "" : this._text[this._pos + n];
+	private _peek(): string {
+		return (this._pos + 1> this._text.length - 1) ? "" : this._text[this._pos + 1];
 	}
 
 	/**
@@ -105,7 +137,7 @@ export default class Lexer {
 			result += this._cc;
 			this._advance();
 		}
-		return new Token(TokenType.INTEGER, result);
+		return new Token(this._line, this._col, TokenType.INTEGER, result);
 	}
 
 	/**
@@ -162,7 +194,8 @@ export default class Lexer {
 			this._advance();
 		}
 		const token = this._reservedKeywords.get(result);
-		return (token === undefined) ? new Token(TokenType.ID, result) : token;
+		const tokenType = (token === undefined) ? TokenType.ID : token;
+		return new Token(this._line, this._col, tokenType, result);
 	}
 	
 }

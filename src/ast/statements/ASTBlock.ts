@@ -1,10 +1,11 @@
-import ASTStatement from "./statements/ASTStatement";
+import ASTStatement from "./ASTStatement";
 
-export default class ASTCompound {
+export default class ASTBlock extends ASTStatement {
 
 	private readonly _children: ASTStatement[];
 
 	constructor(children: ASTStatement[]) {
+		super();
 		this._children = children;
 	}
 

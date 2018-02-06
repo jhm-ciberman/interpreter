@@ -1,3 +1,5 @@
-export default abstract class ASTStatement {
+import ASTNode from "../ASTNode";
+
+export default abstract class ASTStatement extends ASTNode {
 	// ...
 }

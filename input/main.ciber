@@ -1,7 +1,0 @@
-var a;
-var b;
-var c;
-a = 2 * 3 + 4;
-// hi, how are you?
-b = (4 + a) / 2
-b;

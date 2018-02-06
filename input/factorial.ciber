@@ -1,0 +1,14 @@
+/*
+Program that calculates factorial of N 
+*/
+
+var product = 1;
+var j = 1;
+var N = 10;
+
+while ( j <= N ) {
+	product = product * j;
+	j = j + 1;
+}
+
+product;

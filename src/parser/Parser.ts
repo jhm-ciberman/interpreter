@@ -3,17 +3,20 @@ import Token from "../lexer/Token";
 import TokenType from "../lexer/TokenType";
 
 import SyntaxError from "./SyntaxError";
-import ASTCompound from "../ast/ASTCompound";
 import ASTUnaryOp from "../ast/expressions/ASTUnaryOp";
 import UnaryOpType from "../ast/expressions/UnaryOpType";
 import ASTInt from "../ast/expressions/ASTInt";
 import ASTExpression from "../ast/expressions/ASTExpression";
 import ASTBinOp from "../ast/expressions/ASTBinOp";
 import BinOpType from "../ast/expressions/BinOpType";
-import ASTVarDec from "../ast/ASTVarDec";
+import ASTVarDec from "../ast/statements/ASTVarDec";
 import ASTVar from "../ast/expressions/ASTVar";
 import ASTStatement from "../ast/statements/ASTStatement";
 import ASTAssign from "../ast/expressions/ASTAssign";
+import ASTBlock from "../ast/statements/ASTBlock";
+import ASTIf from "../ast/statements/ASTIf";
+import ASTType from "../ast/ASTType";
+import ASTWhile from "../ast/statements/ASTWhile";
 
 
 export default class Parser {
@@ -44,7 +47,7 @@ export default class Parser {
 	/**
 	 * Parses the Token stream into an abstract syntaxt tree
 	 */
-	public parse(): ASTCompound {
+	public parse(): ASTBlock {
 		return this._program();
 	}
 
@@ -105,11 +108,11 @@ export default class Parser {
 	}
 
 	/**
-	 * term 
+	 * multiplicativeExpression
 	 * 		: factor ((MUL | DIV) factor)*
 	 * 		:
 	 */
-	private _term(): ASTExpression {
+	private _multiplicativeExpression(): ASTExpression {
 		let node = this._factor();
 		while (true) {
 			if (this._accept(TokenType.MULTIPLY)) {
@@ -124,17 +127,17 @@ export default class Parser {
 	}
 
 	/**
-	 * expr
-	 * 		: term ((PLUS | MINUS) term)*
+	 * additiveExpression
+	 * 		: multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*
 	 * 		;
 	 */
-	private _expr(): ASTExpression {
-		let node = this._term();
+	private _additiveExpression(): ASTExpression {
+		let node = this._multiplicativeExpression();
 		while (true) {
 			if (this._accept(TokenType.PLUS)) {
-				node = new ASTBinOp(node, BinOpType.ADDITION, this._term());
+				node = new ASTBinOp(node, BinOpType.ADDITION, this._multiplicativeExpression());
 			} else if (this._accept(TokenType.MINUS)) {
-				node = new ASTBinOp(node, BinOpType.SUBSTRACTION, this._term());
+				node = new ASTBinOp(node, BinOpType.SUBSTRACTION, this._multiplicativeExpression());
 			} else {
 				break;
 			}
@@ -143,23 +146,82 @@ export default class Parser {
 	}
 
 	/**
+	 * relationalExpression
+	 * 		: additiveExpression ((LT | GT | LTEQ | GTEQ) additiveExpression)*
+	 * 		;
+	 */
+	private _relationalExpression(): ASTExpression {
+		let node = this._additiveExpression();
+		while (true) {
+			if (this._accept(TokenType.LT)) {
+				node = new ASTBinOp(node, BinOpType.LT, this._additiveExpression());
+			} else if (this._accept(TokenType.GT)) {
+				node = new ASTBinOp(node, BinOpType.GT, this._additiveExpression());
+			} else if (this._accept(TokenType.LTEQ)) {
+				node = new ASTBinOp(node, BinOpType.LTEQ, this._additiveExpression());
+			} else if (this._accept(TokenType.GTEQ)) {
+				node = new ASTBinOp(node, BinOpType.GTEQ, this._additiveExpression());
+			} else {
+				break;
+			}
+		}
+		return node;
+	}
+
+	/**
+	 * additiveExpression
+	 * 		: relationalExpression ((EQ | NOTEQ) relationalExpression)*
+	 * 		;
+	 */
+	private _equalityExpression(): ASTExpression {
+		let node = this._relationalExpression();
+		while (true) {
+			if (this._accept(TokenType.EQ)) {
+				node = new ASTBinOp(node, BinOpType.EQ, this._relationalExpression());
+			} else if (this._accept(TokenType.NOTEQ)) {
+				node = new ASTBinOp(node, BinOpType.NOTEQ, this._relationalExpression());
+			} else {
+				break;
+			}
+		}
+		return node;
+	}
+
+	/**
+	 * expr
+	 * 		: additiveExpression
+	 */
+	private _expr() {
+		return this._equalityExpression();
+	}
+
+	/**
 	 * varDeclaration
-	 * 		: VAR var
+	 * 		: VAR variableName ( COLON ID )? ( ASSIGN expr )?
 	 */
 	private _varDeclaration(): ASTVarDec {
 		this._expect(TokenType.VAR);
-		return new ASTVarDec(this._variableName());
+		const name = this._variableName();
+		let type = null, value = null;
+		if (this._accept(TokenType.COLON)) {
+			this._expect(TokenType.ID);
+			type = new ASTType(this._prev.value);
+		}
+		if (this._accept(TokenType.ASSIGN)) {
+			value = this._expr();
+		}
+		return new ASTVarDec(name, type, value);
 	}
 
 
 	/**
 	 * variableExpression
-	 * 		: variableName ( EQUAL expr )?
+	 * 		: variableName ( ASSIGN expr )?
 	 * 		;
 	 */
 	private _variableExpresion(): ASTExpression {
 		const variable = this._variableName()
-		if (this._accept(TokenType.EQUAL)) {
+		if (this._accept(TokenType.ASSIGN)) {
 			return new ASTAssign(variable, this._expr());
 		}
 		return variable;
@@ -180,7 +242,7 @@ export default class Parser {
 	 * 		: LBRACE (statement)* RBRACE
 	 		;
 	 */
-	private _block(): ASTCompound {
+	private _block(): ASTBlock | string {
 		const arr: ASTExpression[] = [];
 		this._expect(TokenType.LBRACE);
 		while (!this._accept(TokenType.RBRACE)) {
@@ -189,27 +251,73 @@ export default class Parser {
 				arr.push(s);
 			}
 		}
-		return new ASTCompound(arr);
+		return new ASTBlock(arr);
 	}
+
 
 	/**
 	 * statement
-	 * 		: (SEMI | EOL)
+	 * 		: SEMI
 	 * 		| block
 	 * 		| varDeclaration
-	 * 		| expr
+	 * 		| ifStatement
+	 * 		| expr SEMI
 	 * 		;
 	 */
-	private _statement(): ASTStatement | null {
-		if (this._accept(TokenType.SEMI) || this._accept(TokenType.EOL)) {
+	private _statement(): ASTStatement | null{
+		let value;
+		if (this._accept(TokenType.SEMI)) {
 			return null;
-		} else if (this._t.type === TokenType.LBRACE) {
+		}
+		if (this._t.type === TokenType.LBRACE) {
 			return this._block();
 		} else if (this._t.type === TokenType.VAR) {
 			return this._varDeclaration();
+		} else if (this._t.type === TokenType.IF) {
+			return this._ifStatement();	
+		} else if (this._t.type === TokenType.WHILE) {
+			return this._whileStatement();	
 		} else {
-			return this._expr();
+			const value =  this._expr();
+			this._expect(TokenType.SEMI);
+			return value;
 		}
+	}
+
+	/**
+	 * ifStatement
+	 * 		: IF LPAREN expr RPAREN statement (ELSE statement)?
+	 */
+	private _ifStatement() {
+		this._expect(TokenType.IF);
+		this._expect(TokenType.LPAREN);
+		const expr = this._expr();
+		this._expect(TokenType.RPAREN);
+		const statement = this._statement();
+		if (statement === null) {
+			throw new SyntaxError(this._prev);
+		}
+		let statementElse = null;
+		if (this._accept(TokenType.ELSE)) {
+			statementElse = this._statement();
+		}
+		return new ASTIf(expr, statement, statementElse);
+	}
+
+	/**
+	 * whileStatement
+	 * 		: WHILE LPAREN expr RPAREN statement
+	 */
+	private _whileStatement() {
+		this._expect(TokenType.WHILE);
+		this._expect(TokenType.LPAREN);
+		const expr = this._expr();
+		this._expect(TokenType.RPAREN);
+		const statement = this._statement();
+		if (statement === null) {
+			throw new SyntaxError(this._prev);
+		}
+		return new ASTWhile(expr, statement);
 	}
 
 	/**
@@ -217,7 +325,7 @@ export default class Parser {
 	 * 		: (statement)* EOF
 	 * 		;
 	 */
-	private _program(): ASTCompound {
+	private _program(): ASTBlock {
 		const arr: ASTStatement[] = [];
 		while (!this._accept(TokenType.EOF)) {
 			const s = this._statement();
@@ -225,7 +333,7 @@ export default class Parser {
 				arr.push(s);
 			}
 		}
-		return new ASTCompound(arr);
+		return new ASTBlock(arr);
 	}
 
 }

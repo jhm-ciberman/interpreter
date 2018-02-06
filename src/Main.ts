@@ -6,13 +6,25 @@ import { TokenType } from "./lexer/TokenType";
 import Token from "./lexer/Token";
 import Interpreter from "./interpreter/Interpreter";
 import ASTLogger from "./ASTLogger";
+import SyntaxError from "./parser/SyntaxError";
 
 export default class Main {
 	public run(argv: string[]) {
 		if (argv.length > 2) {
 			fse.readFile(path.resolve(argv[2]), "utf8").then(value => {
-				this.processFile(value);
+				try {
+					this.processFile(value);
+				} catch (e) {
+					if (e instanceof SyntaxError) {
+						const lines = value.split('\n');
+						console.error(lines[e.line - 1])
+						console.error(" ".repeat(e.col - 1) + "^");
+					}
+					console.error(e);
+				}
+				
 			}).catch((e) => {
+				
 				console.error(e);
 			});
 		}
@@ -28,12 +40,12 @@ export default class Main {
 		const lexer = new Lexer(value);
 		const parser = new Parser(lexer);
 		
-		console.log("AST: ");
+		
 		const ast = parser.parse();
 		if (ast) {
-			
-			const logger = new ASTLogger();
-			console.log(logger.log(ast));
+			//console.log("AST: ");
+			//const logger = new ASTLogger();
+			//console.log(logger.log(ast));
 
 			console.log("OUTPUT:");
 			const interpreter = new Interpreter();

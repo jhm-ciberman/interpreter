@@ -12,13 +12,12 @@ export default class Context {
 	}
 
 	public lookupVar<T>(name: string): T {
-		console.log("LOOKUP: ", name);
 		return this._vars.lookup(name, true);
 	}
 
-	public insertVar<T>(name: string, value: T): void {
-		console.log("INSERT: ", name, value);
-		return this._vars.insert(name, value);
+	public insertVar<T>(name: string, value: T): T {
+		this._vars.insert(name, value);
+		return value;
 	}
 
 }

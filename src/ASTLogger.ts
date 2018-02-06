@@ -1,15 +1,21 @@
-import ASTCompound from "./ast/ASTCompound";
 import ASTBinOp from "./ast/expressions/ASTBinOp";
 import ASTExpression from "./ast/expressions/ASTExpression";
 import ASTUnaryOp from "./ast/expressions/ASTUnaryOp";
 import ASTInt from "./ast/expressions/ASTInt";
 import ASTVar from "./ast/expressions/ASTVar";
 import ASTStatement from "./ast/statements/ASTStatement";
-import ASTVarDec from "./ast/ASTVarDec";
+import ASTVarDec from "./ast/statements/ASTVarDec";
 import ASTAssign from "./ast/expressions/ASTAssign";
 import NodeVisitor from "./NodeVisitor";
+import ASTBlock from "./ast/statements/ASTBlock";
+import ASTIf from "./ast/statements/ASTIf";
+import ASTWhile from "./ast/statements/ASTWhile";
+import ASTEmpty from "./ast/statements/ASTEmpty";
 
 export default class ASTLogger extends NodeVisitor<string> {
+
+
+
 
 	private _level = -1;
 
@@ -28,7 +34,7 @@ export default class ASTLogger extends NodeVisitor<string> {
 		return "  ".repeat(this._level) + ast.constructor.name + concat + "\n";
 	}
 
-	protected _visitCompound(compound: ASTCompound): string {
+	protected _visitBlock(compound: ASTBlock): string {
 		let str = '';
 		for (const child of compound.children) {
 			str += this._visit(child);
@@ -68,4 +74,29 @@ export default class ASTLogger extends NodeVisitor<string> {
 			+ this._visit(assign.value);
 	}
 
+	protected _visitIf(st: ASTIf): string {
+		let str = this._log(st);
+		str += "  ".repeat(this._level) + "Condition: \n";
+		str += this._visit(st.condition);
+		str += "  ".repeat(this._level) + "Then: \n";
+		str += this._visit(st.then);
+		if (st.else) {
+			str += "  ".repeat(this._level) + "Else: \n";
+			str += this._visit(st.else);
+		}
+		return str;
+	}
+
+	protected _visitWhile(st: ASTWhile): string {
+		let str = this._log(st);
+		str += "  ".repeat(this._level) + "Condition: \n";
+		str += this._visit(st.condition);
+		str += "  ".repeat(this._level) + "Then: \n";
+		str += this._visit(st.then);
+		return str;
+	}
+
+	protected _visitEmpty(_ast: ASTEmpty): string {
+		return "";
+	}
 }
