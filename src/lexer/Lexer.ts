@@ -10,13 +10,20 @@ export default class Lexer {
 	private _cc: string;
 
 	private _pos: number;
+	private _line: number; 
+	private _col: number; 
 
 	private readonly _text: string;
 
 	private _tokenMap: Map<string, Token> = new Map();
 
+	private _reservedKeywords: Map<string, Token> = new Map();
+
 	constructor(text: string) {
+		this._cc = '';
 		this._pos = -1;
+		this._line = 1;
+		this._col = 1;
 		this._text = text;
 		this._advance();
 
@@ -31,6 +38,11 @@ export default class Lexer {
 			.set(")", new Token(TokenType.RPAREN))
 			.set("{", new Token(TokenType.LBRACE))
 			.set("}", new Token(TokenType.RBRACE))
+			.set("=", new Token(TokenType.EQUAL));
+
+		this._reservedKeywords
+			.set("var", new Token(TokenType.VAR))
+			.set("if", new Token(TokenType.IF));
 	}
 
 	/**
@@ -39,23 +51,27 @@ export default class Lexer {
 	 * apart into tokens.
 	 */
 	public getNextToken(): Token {
-		if (this._cc == "") {
-			return new Token(TokenType.EOF);
-		}
 		// Skip whitespace and comments 
 		this._skipCommentsAndWhitespace();
 
-		const c = this._cc;
-		if (Char.isDigit(c)) {
-			return new Token(TokenType.INTEGER, this._integer());
+		if (this._cc == '') {
+			return new Token(TokenType.EOF);
+		}
+
+		if (Char.isDigit(this._cc)) {
+			return this._integer();
+		}
+		if (Char.isAlpha(this._cc)) {
+			return this._id();
+		}
+
+		let t: Token;
+		const token = this._tokenMap.get(this._cc);
+		if (token) {
+			this._advance();
+			return token as Token;
 		} else {
-			let t: Token;
-			if (this._tokenMap.has(c)) {
-				this._advance();
-				return this._tokenMap.get(c) as Token;
-			} else {
-				throw new Error(`Invalid character "${ c }" at position ${ this._pos }`);
-			}
+			throw new Error(`Invalid character "${ this._cc }" at line ${ this._line } col ${ this._col }`);
 		}
 	}
 
@@ -63,7 +79,12 @@ export default class Lexer {
 	 * Advance the 'pos' pointer and set the 'current_char' variable.
 	 */
 	private _advance(): string {
+		if (this._cc === '\n') {
+			this._line++;
+			this._col = 0;
+		}
 		this._pos++;
+		this._col++;
 		this._cc = (this._pos > this._text.length - 1) ? "" : this._text[this._pos];		
 		return this._cc;
 	}
@@ -78,19 +99,19 @@ export default class Lexer {
 	/**
 	 * Return a (multidigit) integer consumed from the input as a string.
 	 */
-	private _integer(): string {
+	private _integer(): Token {
 		let result = '';
 		while (this._cc !== '' && Char.isDigit(this._cc)) {
 			result += this._cc;
 			this._advance();
 		}
-		return result;
+		return new Token(TokenType.INTEGER, result);
 	}
 
 	/**
 	 * Skips all comments and whitespace characters
 	 */
-	private _skipCommentsAndWhitespace() {
+	private _skipCommentsAndWhitespace(): void {
 		while (this._cc !== '' && Char.isWhitespace(this._cc)) {
 			this._advance();
 		}
@@ -113,7 +134,7 @@ export default class Lexer {
 	/**
 	 * Skips a detected multiline comment.
 	 */
-	private _skipMultilineComment() {
+	private _skipMultilineComment(): void {
 		do {
 			this._advance();
 		} while (this._cc !== '' && this._cc !== '*' && this._peek() !== '/')
@@ -124,10 +145,24 @@ export default class Lexer {
 	/**
 	 * Skips a detected double slash comment.
 	 */
-	private _skipDoubleSlashComment() {
+	private _skipDoubleSlashComment(): void {
 		do {
 			this._advance();
 		} while (this._cc !== '\n' && this._cc !== '')
 		this._advance();
 	}
+
+	/**
+	 * Handle identifiers and reserved keywords
+	 */
+	private _id(): Token {
+		let result = '';
+		while (this._cc !== '' && Char.isAlphaNumeric(this._cc)) {
+			result += this._cc;
+			this._advance();
+		}
+		const token = this._reservedKeywords.get(result);
+		return (token === undefined) ? new Token(TokenType.ID, result) : token;
+	}
+	
 }

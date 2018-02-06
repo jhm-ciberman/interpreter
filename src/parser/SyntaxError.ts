@@ -1,5 +1,5 @@
-import { TokenType } from "../Lexer/TokenType";
-import Token from "../Lexer/Token";
+import { TokenType } from "../lexer/TokenType";
+import Token from "../lexer/Token";
 
 export default class SyntaxError extends Error {
 	private readonly _expected: TokenType[];

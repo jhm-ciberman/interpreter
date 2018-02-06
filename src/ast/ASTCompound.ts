@@ -1,28 +1,18 @@
-import AST from "./AST";
+import ASTStatement from "./statements/ASTStatement";
 
-export default class ASTCompound extends AST {
+export default class ASTCompound {
 
-	private readonly _childs: AST[];
+	private readonly _children: ASTStatement[];
 
-	constructor(childs: AST[]) {
-		super()
-		this._childs = childs;
+	constructor(children: ASTStatement[]) {
+		this._children = children;
 	}
 
-	public eval() {
-		let r: any;
-		for (const child of this._childs) {
-			r = child.eval();
-		}
-		return r;
-	}
-
-	public log(level: number) {
-		let str = super.log(level);
-		for (const child of this._childs) {
-			str += child.log(level + 1);
-		}
-		return str;
+	/**
+	 * Iterator function
+	 */
+	public get children() {
+		return this._children[Symbol.iterator]();
 	}
 
 }

@@ -4,7 +4,8 @@ import Lexer from "./lexer/Lexer";
 import Parser from "./parser/Parser";
 import { TokenType } from "./lexer/TokenType";
 import Token from "./lexer/Token";
-import AST from "./ast/AST";
+import Interpreter from "./interpreter/Interpreter";
+import ASTLogger from "./ASTLogger";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -31,10 +32,12 @@ export default class Main {
 		const ast = parser.parse();
 		if (ast) {
 			
-			console.log(ast.log(1));
+			const logger = new ASTLogger();
+			console.log(logger.log(ast));
 
 			console.log("OUTPUT:");
-			console.log(ast.eval());
+			const interpreter = new Interpreter();
+			console.log(interpreter.eval(ast));
 		} else {
 			console.log("> No ast");
 		}

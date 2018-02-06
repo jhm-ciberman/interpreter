@@ -7,4 +7,12 @@ export default class Char {
 		return ([' ', '\t', '\r'].indexOf(char) !== -1);
 	}
 
+	public static isAlphaNumeric(char: string): boolean {
+		return (/^[A-Za-z0-9]+$/.exec(char) !== null);
+	}
+
+	public static isAlpha(char: string): boolean {
+		return (/^[A-Za-z]+$/.exec(char) !== null);
+	}
+
 }
