@@ -36,8 +36,8 @@ And run it with:
 ciber main.ciber
 ```
 
-The output will be:
+The output will be the factorial of 10:
 
 ```bash
-10
+3628800
 ```
