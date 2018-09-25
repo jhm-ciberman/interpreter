@@ -10,6 +10,7 @@ import ASTBlock from "./ast/statements/ASTBlock";
 import ASTNode from "./ast/ASTNode";
 import ASTIf from "./ast/statements/ASTIf";
 import ASTWhile from "./ast/statements/ASTWhile";
+import ASTBigno from "./ast/ASTBigno";
 
 export default abstract class NodeVisitor<T> {
 
@@ -34,6 +35,7 @@ export default abstract class NodeVisitor<T> {
 
 	protected abstract _visitIf(ast: ASTIf): T;
 	protected abstract _visitWhile(ast: ASTWhile): T;
+	protected abstract _visitBigno(ast: ASTBigno): T;
 	
 
 

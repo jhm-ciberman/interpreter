@@ -14,8 +14,14 @@ import Context from "./Context";
 import ASTBlock from "../ast/statements/ASTBlock";
 import ASTIf from "../ast/statements/ASTIf";
 import ASTWhile from "../ast/statements/ASTWhile";
+import ASTBigno from "../ast/ASTBigno";
 
 export default class Interpreter extends NodeVisitor<any> {
+	
+	protected _visitBigno(ast: ASTBigno): number {
+		console.log("HOLA SOY BIGNOOOOOOO. Y VINE A CAGAR EL PROGRAMA!!!");
+		return -10000;
+	}
 
 	private _context: Context = new Context();
 

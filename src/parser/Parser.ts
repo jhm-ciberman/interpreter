@@ -17,6 +17,7 @@ import ASTBlock from "../ast/statements/ASTBlock";
 import ASTIf from "../ast/statements/ASTIf";
 import ASTType from "../ast/ASTType";
 import ASTWhile from "../ast/statements/ASTWhile";
+import ASTBigno from "../ast/ASTBigno";
 
 
 export default class Parser {
@@ -273,6 +274,9 @@ export default class Parser {
 			return this._block();
 		} else if (this._t.type === TokenType.VAR) {
 			return this._varDeclaration();
+		} else if (this._t.type === TokenType.BIGNO) {
+			this._expect(TokenType.BIGNO);
+			return new ASTBigno();
 		} else if (this._t.type === TokenType.IF) {
 			return this._ifStatement();	
 		} else if (this._t.type === TokenType.WHILE) {

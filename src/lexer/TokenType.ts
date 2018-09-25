@@ -29,6 +29,8 @@ export enum TokenType {
 	WHILE = "WHILE",
 	VAR = "VAR",
 
+	BIGNO = "BIGNO",
+	
 	EOF = "EOF",
 }
 

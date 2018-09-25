@@ -43,7 +43,8 @@ export default class Lexer {
 			.set("var", TokenType.VAR)
 			.set("if", TokenType.IF)
 			.set("else", TokenType.ELSE)
-			.set("while", TokenType.WHILE);
+			.set("while", TokenType.WHILE)
+			.set("bigno", TokenType.BIGNO);
 	}
 
 	/**

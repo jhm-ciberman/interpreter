@@ -43,9 +43,9 @@ export default class Main {
 		
 		const ast = parser.parse();
 		if (ast) {
-			//console.log("AST: ");
-			//const logger = new ASTLogger();
-			//console.log(logger.log(ast));
+			console.log("AST: ");
+			const logger = new ASTLogger();
+			console.log(logger.log(ast));
 
 			console.log("OUTPUT:");
 			const interpreter = new Interpreter();
@@ -53,7 +53,7 @@ export default class Main {
 		} else {
 			console.log("> No ast");
 		}
-	}
+	} 
 
 	private _printStream(value: string) {
 		console.log("STREAM:");
