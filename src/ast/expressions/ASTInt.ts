@@ -18,7 +18,7 @@ export default class ASTInt extends ASTExpression {
 	}
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {
-		return analizer.typeFor("int");
+		return analizer.TYPE_INT;
 	}
 
 	public evaluate(interpreter: IInterpreter): any {

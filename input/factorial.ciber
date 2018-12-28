@@ -2,7 +2,7 @@
 Program that calculates factorial of N 
 */
 
-var product = 1;
+var product: int = 1;
 var j = 1;
 var N = 10;
 

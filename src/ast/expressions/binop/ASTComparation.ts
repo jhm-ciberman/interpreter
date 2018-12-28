@@ -1,6 +1,6 @@
 import ASTBinOp from "./ASTBinOp";
 import ASTExpression from "../ASTExpression";
-import BinOpType from "../BinOpType";
+import BinOpType from "../ComparationType";
 import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
 import IInterpreter from "../../../output/interpreter/IInterpreter";
@@ -17,9 +17,9 @@ export default class ASTComparation extends ASTBinOp {
     protected _operationName(): string {
         switch (this.type) {
 			case BinOpType.EQ:
-				return "===";
+				return "==";
 			case BinOpType.NOTEQ:
-				return "!==";
+				return "!=";
 			case BinOpType.LT:
 				return "<";
 			case BinOpType.LTEQ:
@@ -32,7 +32,14 @@ export default class ASTComparation extends ASTBinOp {
     }
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {
-		return analizer.TYPE_BOOL;
+		var leftType = this.left.resolveType(analizer);
+		var rightType = this.left.resolveType(analizer);
+
+		if (leftType === rightType) {
+			return analizer.TYPE_BOOL;
+		}
+
+		throw new SemanticError("Cannot compare. Types are incompatible: " + leftType.name + " and " + rightType.name);
     }
     
     public evaluate(interpreter: IInterpreter): any {

@@ -22,7 +22,6 @@ export default class ASTVar extends ASTExpression {
 		logger.printNode(this, " [" + this.name + "]");
 	}
 
-	
 	public resolveType(analizer: ISemanticAnalyzer): Type {
 		return analizer.TYPE_INT;
 	}

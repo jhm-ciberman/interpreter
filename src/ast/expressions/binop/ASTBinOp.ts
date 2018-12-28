@@ -1,5 +1,5 @@
 import ASTExpression from "../ASTExpression";
-import BinOpType from "../BinOpType";
+import BinOpType from "../ComparationType";
 import IASTLogger from "../../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";

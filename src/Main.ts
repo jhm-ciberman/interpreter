@@ -8,6 +8,7 @@ import Interpreter from "./output/interpreter/Interpreter";
 import SyntaxError from "./parser/SyntaxError";
 import TokenStream from "./parser/TokenStream";
 import ASTLogger from "./output/ast/ASTLogger";
+import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -45,6 +46,10 @@ export default class Main {
 		
 		const ast = parser.parse();
 		if (ast) {
+
+			const analyzer = new SemanticAnalyzer();
+			analyzer.analyze(ast);
+
 			console.log("AST: ");
 			const logger = new ASTLogger(process.stdout);
 			logger.visit(ast);
