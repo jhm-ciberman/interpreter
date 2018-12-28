@@ -1,5 +1,5 @@
 import Type from "./Type";
-import SymbolTable from "../SymbolTable";
+import SymbolTable from "../output/interpreter/SymbolTable";
 import Symbol from "./Symbol";
 
 export default class Scope {

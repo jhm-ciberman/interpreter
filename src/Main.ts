@@ -4,9 +4,10 @@ import Lexer from "./lexer/Lexer";
 import Parser from "./parser/Parser";
 import { TokenType } from "./lexer/TokenType";
 import Token from "./lexer/Token";
-import Interpreter from "./interpreter/Interpreter";
-import ASTLogger from "./ASTLogger";
+import Interpreter from "./output/interpreter/Interpreter";
+import ASTLogger from "./output/ASTLogger";
 import SyntaxError from "./parser/SyntaxError";
+import TokenStream from "./parser/TokenStream";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -38,7 +39,8 @@ export default class Main {
 		this._printStream(value);
 
 		const lexer = new Lexer(value);
-		const parser = new Parser(lexer);
+		const stream = new TokenStream(lexer);
+		const parser = new Parser(stream);
 		
 		
 		const ast = parser.parse();

@@ -1,33 +1,32 @@
-import ASTBinOp from "./ast/expressions/ASTBinOp";
-import ASTExpression from "./ast/expressions/ASTExpression";
-import ASTUnaryOp from "./ast/expressions/ASTUnaryOp";
-import ASTInt from "./ast/expressions/ASTInt";
-import ASTVar from "./ast/expressions/ASTVar";
-import ASTStatement from "./ast/statements/ASTStatement";
-import ASTVarDec from "./ast/statements/ASTVarDec";
-import ASTAssign from "./ast/expressions/ASTAssign";
-import NodeVisitor from "./NodeVisitor";
-import ASTBlock from "./ast/statements/ASTBlock";
-import ASTIf from "./ast/statements/ASTIf";
-import ASTWhile from "./ast/statements/ASTWhile";
+import ASTBinOp from "../ast/expressions/ASTBinOp";
+import ASTUnaryOp from "../ast/expressions/ASTUnaryOp";
+import ASTInt from "../ast/expressions/ASTInt";
+import ASTVar from "../ast/expressions/ASTVar";
+import ASTVarDec from "../ast/statements/ASTVarDec";
+import ASTAssign from "../ast/expressions/ASTAssign";
+import NodeVisitor from "../NodeVisitor";
+import ASTBlock from "../ast/statements/ASTBlock";
+import ASTIf from "../ast/statements/ASTIf";
+import ASTWhile from "../ast/statements/ASTWhile";
+import ASTNode from "../ast/ASTNode";
 
 export default class ASTLogger extends NodeVisitor<string> {
 
 	private _level = -1;
 
-	public log(ast: any): string {
+	public log(ast: ASTNode): string {
 		return this._visit(ast);
 	}
 
-	protected _visit(ast: any): string {
+	protected _visit(ast: ASTNode): string {
 		this._level++;
 		const r: string = super._visit(ast);
 		this._level--;
 		return r;
 	}
 
-	private _log(ast: any, concat: string = ""): string {
-		return "  ".repeat(this._level) + ast.constructor.name + concat + "\n";
+	private _log(ast: ASTNode, concat: string = ""): string {
+		return "  ".repeat(this._level) + ast.getNodeName() + concat + "\n";
 	}
 
 	protected _visitBlock(compound: ASTBlock): string {

@@ -13,8 +13,8 @@ import ASTWhile from "./ast/statements/ASTWhile";
 
 export default abstract class NodeVisitor<T> {
 
-	protected _visit(ast: any): T {
-		const name = ast.constructor.name.split("AST").join("");
+	protected _visit(ast: ASTNode): T {
+		const name = ast.getNodeName();
 		const methodName = "_visit" + name;
 		if (methodName in this) {
 			return ((this as any)[methodName])(ast);;

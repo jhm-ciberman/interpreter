@@ -1,5 +1,4 @@
-import Symbol from "../semantic/Symbol";
-import SymbolTable from "../SymbolTable";
+import SymbolTable from "./SymbolTable";
 
 export default class Context {
 

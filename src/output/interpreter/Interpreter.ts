@@ -1,19 +1,16 @@
-import Parser from "../parser/Parser";
-import ASTStatement from "../ast/statements/ASTStatement";
-import ASTBinOp from "../ast/expressions/ASTBinOp";
-import ASTExpression from "../ast/expressions/ASTExpression";
-import { BinOpType } from "../ast/expressions/BinOpType";
-import ASTUnaryOp from "../ast/expressions/ASTUnaryOp";
-import { UnaryOpType } from "../ast/expressions/UnaryOpType";
-import ASTAssign from "../ast/expressions/ASTAssign";
-import NodeVisitor from "../NodeVisitor";
-import ASTVar from "../ast/expressions/ASTVar";
-import ASTInt from "../ast/expressions/ASTInt";
-import ASTVarDec from "../ast/statements/ASTVarDec";
+import ASTBinOp from "../../ast/expressions/ASTBinOp";
+import { BinOpType } from "../../ast/expressions/BinOpType";
+import ASTUnaryOp from "../../ast/expressions/ASTUnaryOp";
+import { UnaryOpType } from "../../ast/expressions/UnaryOpType";
+import ASTAssign from "../../ast/expressions/ASTAssign";
+import NodeVisitor from "../../NodeVisitor";
+import ASTVar from "../../ast/expressions/ASTVar";
+import ASTInt from "../../ast/expressions/ASTInt";
+import ASTVarDec from "../../ast/statements/ASTVarDec";
 import Context from "./Context";
-import ASTBlock from "../ast/statements/ASTBlock";
-import ASTIf from "../ast/statements/ASTIf";
-import ASTWhile from "../ast/statements/ASTWhile";
+import ASTBlock from "../../ast/statements/ASTBlock";
+import ASTIf from "../../ast/statements/ASTIf";
+import ASTWhile from "../../ast/statements/ASTWhile";
 
 export default class Interpreter extends NodeVisitor<any> {
 

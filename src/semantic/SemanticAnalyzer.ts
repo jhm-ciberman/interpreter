@@ -21,6 +21,7 @@ export default class SemanticAnalyzer extends NodeVisitor<Type | undefined> {
 		this._scope.declareType("int");
 		this._scope.declareType("float");
 	}
+
 	public analyze(program: ASTBlock) {
 
 		this._visit(program);
