@@ -7,7 +7,7 @@ export default abstract class ASTExpression extends ASTStatement {
 	
 	public abstract resolveType(analizer: ISemanticAnalyzer): Type;
 
-	public analize(analizer: ISemanticAnalyzer): void {
+	public analyze(analizer: ISemanticAnalyzer): void {
 		this.resolveType(analizer);
 	}
 

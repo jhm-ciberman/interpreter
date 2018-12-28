@@ -25,9 +25,9 @@ export default class ASTBlock extends ASTStatement {
 		}
 	}
 
-	public analize(analizer: ISemanticAnalyzer): void {
+	public analyze(analizer: ISemanticAnalyzer): void {
 		for (const child of this.children) {
-			child.analize(analizer);
+			child.analyze(analizer);
 		}
 	}
 

@@ -14,7 +14,7 @@ export default class ASTType extends ASTNode {
 		throw new Error("Method not implemented.");
 	}
 
-	public analize(analizer: ISemanticAnalyzer): void {
+	public analyze(analizer: ISemanticAnalyzer): void {
 
 	}
 }

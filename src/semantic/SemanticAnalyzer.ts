@@ -20,7 +20,7 @@ export default class SemanticAnalyzer implements ISemanticAnalyzer {
 	}
 
 	public analyze(program: ASTBlock) {
-		program.analize(this);
+		program.analyze(this);
 	}
 
 	public typeFor(typeName: string): Type {

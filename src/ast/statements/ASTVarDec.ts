@@ -27,7 +27,7 @@ export default class ASTVarDec extends ASTStatement {
 		logger.printNode(this, " [" + this.var.name + "]");
 	}
 
-	public analize(analizer: ISemanticAnalyzer): void {
+	public analyze(analizer: ISemanticAnalyzer): void {
 		let decType: Type | undefined;
 		let infType: Type | undefined;
 		if (this.type) {

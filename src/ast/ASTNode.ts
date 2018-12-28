@@ -7,5 +7,5 @@ export default abstract class ASTNode {
     }
     
     public abstract log(logger: IASTLogger): void;
-    public abstract analize(analizer: ISemanticAnalyzer): void;
+    public abstract analyze(analizer: ISemanticAnalyzer): void;
 }

@@ -25,10 +25,10 @@ export default class ASTWhile extends ASTStatement {
 		logger.visit(this.then);
 	}
 	
-	public analize(analizer: ISemanticAnalyzer): void {
-		this.condition.analize(analizer);
+	public analyze(analizer: ISemanticAnalyzer): void {
+		this.condition.analyze(analizer);
 		if (this.then) {
-			this.then.analize(analizer);
+			this.then.analyze(analizer);
 		}
 		return undefined;
 	}

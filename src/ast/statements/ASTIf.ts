@@ -32,13 +32,13 @@ export default class ASTIf extends ASTStatement {
 		}
 	}
 
-	public analize(analizer: ISemanticAnalyzer): void {
-		this.condition.analize(analizer)
+	public analyze(analizer: ISemanticAnalyzer): void {
+		this.condition.analyze(analizer)
 		if (this.then) {
-			this.then.analize(analizer)
+			this.then.analyze(analizer)
 		}
 		if (this.else) {
-			this.else.analize(analizer)
+			this.else.analyze(analizer)
 		}
 	}
 
