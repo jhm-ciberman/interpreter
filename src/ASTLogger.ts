@@ -10,13 +10,8 @@ import NodeVisitor from "./NodeVisitor";
 import ASTBlock from "./ast/statements/ASTBlock";
 import ASTIf from "./ast/statements/ASTIf";
 import ASTWhile from "./ast/statements/ASTWhile";
-import ASTBigno from "./ast/ASTBigno";
 
 export default class ASTLogger extends NodeVisitor<string> {
-
-
-
-
 
 	private _level = -1;
 
@@ -95,8 +90,5 @@ export default class ASTLogger extends NodeVisitor<string> {
 		str += "  ".repeat(this._level) + "Then: \n";
 		str += this._visit(st.then);
 		return str;
-	}
-	protected _visitBigno(ast: ASTBigno): string {
-		return this._log(ast);
 	}
 }

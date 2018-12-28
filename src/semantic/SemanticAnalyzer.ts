@@ -11,15 +11,9 @@ import ASTVar from "../ast/expressions/ASTVar";
 import ASTIf from "../ast/statements/ASTIf";
 import ASTWhile from "../ast/statements/ASTWhile";
 import Type from "./Type";
-import ASTBigno from "../ast/ASTBigno";
 
 export default class SemanticAnalyzer extends NodeVisitor<Type | undefined> {
 	
-	protected _visitBigno(ast: ASTBigno): Type | undefined {
-		throw new Error("Method not implemented.");
-	}
-
-
 	private _scope: Scope = new Scope();
 
 	constructor() {

@@ -37,14 +37,13 @@ export default class Lexer {
 			.set(")", TokenType.RPAREN)
 			.set("{", TokenType.LBRACE)
 			.set("}", TokenType.RBRACE)
-			.set(":", TokenType.COLON)
+			.set(":", TokenType.COLON);
 
 		this._reservedKeywords
 			.set("var", TokenType.VAR)
 			.set("if", TokenType.IF)
 			.set("else", TokenType.ELSE)
 			.set("while", TokenType.WHILE)
-			.set("bigno", TokenType.BIGNO);
 	}
 
 	/**

@@ -28,8 +28,6 @@ export enum TokenType {
 	ELSE = "ELSE",
 	WHILE = "WHILE",
 	VAR = "VAR",
-
-	BIGNO = "BIGNO",
 	
 	EOF = "EOF",
 }
