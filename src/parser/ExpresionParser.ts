@@ -13,6 +13,7 @@ import ASTAddition from "../ast/expressions/binop/ASTAddition";
 import ASTSubstraction from "../ast/expressions/binop/ASTSubstraction";
 import ASTMultiplication from "../ast/expressions/binop/ASTMultiplication";
 import ASTDivision from "../ast/expressions/binop/ASTDivision";
+import ASTFloat from "../ast/expressions/ASTFloat";
 
 export default class ExpresionParser {
 
@@ -47,10 +48,47 @@ export default class ExpresionParser {
 	}
 
 	/**
+	 * number
+	 * 		: DOT INTEGER
+	 * 		| INTEGER ( DOT INTEGER? )?
+	 */
+	private _number(): ASTExpression {
+		switch (this._stream.current.type) {
+			case TokenType.DOT:
+				this._stream.expect(TokenType.DOT);
+				const fractional = this._stream.expect(TokenType.INTEGER);
+				return new ASTFloat("0", fractional.value);
+
+			case TokenType.INTEGER:
+				const integer = this._stream.expect(TokenType.INTEGER);
+				if (this._stream.accept(TokenType.DOT)) {
+					if (this._stream.current.type === TokenType.INTEGER) {
+						const fractional = this._stream.expect(TokenType.INTEGER);
+						return new ASTFloat(integer.value, fractional.value);
+					} else {
+						return new ASTFloat(integer.value, "0");
+					}
+				} else {
+					return new ASTInt(integer.value);
+				}
+
+			default:
+				throw new SyntaxError(this._stream.current, [
+					TokenType.DOT,
+					TokenType.INTEGER,
+				]);
+		}
+
+
+
+		
+	}
+
+	/**
 	 * factor 
 	 * 		: PLUS factor 
 	 * 		| MINUS factor
-	 * 		| INTEGER 
+	 * 		| number 
 	 * 		| LPAREN expr RPAREN
 	 * 		| variableExpresion
 	 * 		;
@@ -66,8 +104,8 @@ export default class ExpresionParser {
 				return new ASTUnaryOp(UnaryOpType.MINUS, this.expr());
 
 			case TokenType.INTEGER:
-				this._stream.expect(TokenType.INTEGER);
-				return new ASTInt(this._stream.prev.value);
+			case TokenType.DOT:
+				return this._number();
 
 			case TokenType.LPAREN:
 				this._stream.expect(TokenType.LPAREN);

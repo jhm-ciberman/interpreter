@@ -29,6 +29,7 @@ export default class Lexer {
 
 		this._tokenMap
 			.set(";", TokenType.SEMI)
+			.set(".", TokenType.DOT)
 			.set("+", TokenType.PLUS)
 			.set("-", TokenType.MINUS)
 			.set("*", TokenType.MULTIPLY)
@@ -125,7 +126,7 @@ export default class Lexer {
 	 * return the next character from the text buffer without incrementing the current position
 	 */
 	private _peek(): string {
-		return (this._pos + 1> this._text.length - 1) ? "" : this._text[this._pos + 1];
+		return (this._pos + 1 > this._text.length - 1) ? "" : this._text[this._pos + 1];
 	}
 
 	/**
@@ -133,9 +134,14 @@ export default class Lexer {
 	 */
 	private _integer(): Token {
 		let result = '';
-		while (this._cc !== '' && Char.isDigit(this._cc)) {
-			result += this._cc;
-			this._advance();
+		let isN
+		while (this._cc !== '') {
+			if (Char.isDigit(this._cc)) {
+				result += this._cc;
+				this._advance();
+			} else {
+				break;
+			}
 		}
 		return new Token(this._line, this._col, TokenType.INTEGER, result);
 	}

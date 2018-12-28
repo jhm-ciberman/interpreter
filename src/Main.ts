@@ -37,7 +37,7 @@ export default class Main {
 		console.log("INPUT:");
 		console.log(value);
 		
-		this._printStream(value);
+		// this._printStream(value);
 
 		const lexer = new Lexer(value);
 		const stream = new TokenStream(lexer);

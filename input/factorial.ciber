@@ -3,8 +3,8 @@ Program that calculates factorial of N
 */
 
 var product: int = 1;
-var j = 1;
-var N = 10;
+var j: int = 1;
+var N: int = 10;
 
 while ( j <= N ) {
 	product = product * j;

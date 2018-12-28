@@ -19,6 +19,7 @@ export enum TokenType {
 	EQ = "EQ",
 	NOTEQ = "NOTEQ",
 	
+	DOT = "dot",
 	COLON = "COLON",
 	SEMI = "SEMI",
 	ID = "ID",
