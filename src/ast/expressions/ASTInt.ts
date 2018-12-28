@@ -1,5 +1,8 @@
 import ASTExpression from "./ASTExpression";
 import IASTLogger from "../../output/ast/IASTLogger";
+import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
+import Type from "../../semantic/Type";
+import IInterpreter from "../../output/interpreter/IInterpreter";
 
 export default class ASTInt extends ASTExpression {
 	
@@ -12,5 +15,13 @@ export default class ASTInt extends ASTExpression {
 
 	public log(logger: IASTLogger): void {
 		return logger.printNode(this, " = " + this.value );
+	}
+
+	public resolveType(analizer: ISemanticAnalyzer): Type {
+		return analizer.typeFor("int");
+	}
+
+	public evaluate(interpreter: IInterpreter): any {
+		return this.value;
 	}
 }

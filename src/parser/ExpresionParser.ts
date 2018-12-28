@@ -3,12 +3,17 @@ import TokenType from "../lexer/TokenType";
 import ASTUnaryOp from "../ast/expressions/ASTUnaryOp";
 import UnaryOpType from "../ast/expressions/UnaryOpType";
 import ASTInt from "../ast/expressions/ASTInt";
-import ASTBinOp from "../ast/expressions/ASTBinOp";
+import ASTBinOp from "../ast/expressions/binop/ASTBinOp";
 import BinOpType from "../ast/expressions/BinOpType";
 import TokenStream from "./TokenStream";
 import SyntaxError from "./SyntaxError";
 import ASTAssign from "../ast/expressions/ASTAssign";
 import ASTVar from "../ast/expressions/ASTVar";
+import ASTComparation from "../ast/expressions/binop/ASTComparation";
+import ASTAddition from "../ast/expressions/binop/ASTAddition";
+import ASTSubstraction from "../ast/expressions/binop/ASTSubstraction";
+import ASTMultiplication from "../ast/expressions/binop/ASTMultiplication";
+import ASTDivision from "../ast/expressions/binop/ASTDivision";
 
 export default class ExpresionParser {
 
@@ -94,9 +99,9 @@ export default class ExpresionParser {
 		let node = this._factor();
 		while (true) {
 			if (this._stream.accept(TokenType.MULTIPLY)) {
-				node = new ASTBinOp(node, BinOpType.MULTIPLICATION, this._factor());
+				node = new ASTMultiplication(node, this._factor());
 			} else if (this._stream.accept(TokenType.DIVISION)) {
-				node = new ASTBinOp(node, BinOpType.DIVISION, this._factor());
+				node = new ASTDivision(node, this._factor());
 			} else {
 				break;
 			}
@@ -113,9 +118,9 @@ export default class ExpresionParser {
 		let node = this._multiplicativeExpression();
 		while (true) {
 			if (this._stream.accept(TokenType.PLUS)) {
-				node = new ASTBinOp(node, BinOpType.ADDITION, this._multiplicativeExpression());
+				node = new ASTAddition(node, this._multiplicativeExpression());
 			} else if (this._stream.accept(TokenType.MINUS)) {
-				node = new ASTBinOp(node, BinOpType.SUBSTRACTION, this._multiplicativeExpression());
+				node = new ASTSubstraction(node, this._multiplicativeExpression());
 			} else {
 				break;
 			}
@@ -132,13 +137,13 @@ export default class ExpresionParser {
 		let node = this._additiveExpression();
 		while (true) {
 			if (this._stream.accept(TokenType.LT)) {
-				node = new ASTBinOp(node, BinOpType.LT, this._additiveExpression());
+				node = new ASTComparation(node, BinOpType.LT, this._additiveExpression());
 			} else if (this._stream.accept(TokenType.GT)) {
-				node = new ASTBinOp(node, BinOpType.GT, this._additiveExpression());
+				node = new ASTComparation(node, BinOpType.GT, this._additiveExpression());
 			} else if (this._stream.accept(TokenType.LTEQ)) {
-				node = new ASTBinOp(node, BinOpType.LTEQ, this._additiveExpression());
+				node = new ASTComparation(node, BinOpType.LTEQ, this._additiveExpression());
 			} else if (this._stream.accept(TokenType.GTEQ)) {
-				node = new ASTBinOp(node, BinOpType.GTEQ, this._additiveExpression());
+				node = new ASTComparation(node, BinOpType.GTEQ, this._additiveExpression());
 			} else {
 				break;
 			}
@@ -155,9 +160,9 @@ export default class ExpresionParser {
 		let node = this._relationalExpression();
 		while (true) {
 			if (this._stream.accept(TokenType.EQ)) {
-				node = new ASTBinOp(node, BinOpType.EQ, this._relationalExpression());
+				node = new ASTComparation(node, BinOpType.EQ, this._relationalExpression());
 			} else if (this._stream.accept(TokenType.NOTEQ)) {
-				node = new ASTBinOp(node, BinOpType.NOTEQ, this._relationalExpression());
+				node = new ASTComparation(node, BinOpType.NOTEQ, this._relationalExpression());
 			} else {
 				break;
 			}

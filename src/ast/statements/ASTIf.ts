@@ -2,6 +2,8 @@ import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import ASTBlock from "./ASTBlock";
 import IASTLogger from "../../output/ast/IASTLogger";
+import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
+import IInterpreter from "../../output/interpreter/IInterpreter";
 
 export default class ASTIf extends ASTStatement {
 
@@ -27,6 +29,24 @@ export default class ASTIf extends ASTStatement {
 		if (this.else) {
 			logger.printLine("Else: ");
 			logger.visit(this.else);
+		}
+	}
+
+	public analize(analizer: ISemanticAnalyzer): void {
+		this.condition.analize(analizer)
+		if (this.then) {
+			this.then.analize(analizer)
+		}
+		if (this.else) {
+			this.else.analize(analizer)
+		}
+	}
+
+	public execute(interpreter: IInterpreter): void {
+		if (this.condition.evaluate(interpreter) === true) {
+			this.then.execute(interpreter);
+		} else if (this.else) {
+			this.else.execute(interpreter);
 		}
 	}
 }

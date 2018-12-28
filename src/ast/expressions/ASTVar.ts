@@ -1,7 +1,9 @@
 import Token from "../../lexer/Token";
 import ASTExpression from "./ASTExpression";
-import Symbol from "../../semantic/Symbol";
 import IASTLogger from "../../output/ast/IASTLogger";
+import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
+import Type from "../../semantic/Type";
+import IInterpreter from "../../output/interpreter/IInterpreter";
 
 export default class ASTVar extends ASTExpression {
 
@@ -18,5 +20,14 @@ export default class ASTVar extends ASTExpression {
 
 	public log(logger: IASTLogger): void {
 		logger.printNode(this, " [" + this.name + "]");
+	}
+
+	
+	public resolveType(analizer: ISemanticAnalyzer): Type {
+		return analizer.TYPE_INT;
+	}
+
+	public evaluate(interpreter: IInterpreter): any {
+		return interpreter.getVarValue(this.name);
 	}
 }

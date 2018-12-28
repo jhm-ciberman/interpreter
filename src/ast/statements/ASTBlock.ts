@@ -1,5 +1,7 @@
 import ASTStatement from "./ASTStatement";
 import IASTLogger from "../../output/ast/IASTLogger";
+import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
+import IInterpreter from "../../output/interpreter/IInterpreter";
 
 export default class ASTBlock extends ASTStatement {
 
@@ -20,6 +22,19 @@ export default class ASTBlock extends ASTStatement {
 	public log(logger: IASTLogger): void {
 		for (const child of this.children) {
 			logger.visit(child);
+		}
+	}
+
+	public analize(analizer: ISemanticAnalyzer): void {
+		for (const child of this.children) {
+			child.analize(analizer);
+		}
+	}
+
+	public execute(interpreter: IInterpreter): void {
+		let val: any;
+		for (const child of this.children) {
+			child.execute(interpreter);
 		}
 	}
 }

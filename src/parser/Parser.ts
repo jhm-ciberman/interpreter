@@ -61,7 +61,7 @@ export default class Parser {
 	 		;
 	 */
 	private _block(): ASTBlock {
-		const arr: ASTExpression[] = [];
+		const arr: ASTStatement[] = [];
 		this._stream.expect(TokenType.LBRACE);
 		while (!this._stream.accept(TokenType.RBRACE)) {
 			const s = this._statement();

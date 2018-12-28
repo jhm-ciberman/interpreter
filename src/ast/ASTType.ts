@@ -1,5 +1,6 @@
 import ASTNode from "./ASTNode";
 import IASTLogger from "../output/ast/IASTLogger";
+import ISemanticAnalyzer from "../semantic/ISemanticAnalyzer";
 
 export default class ASTType extends ASTNode {
 	public readonly name: string; 
@@ -11,5 +12,9 @@ export default class ASTType extends ASTNode {
 
 	public log(logger: IASTLogger): string {
 		throw new Error("Method not implemented.");
+	}
+
+	public analize(analizer: ISemanticAnalyzer): void {
+
 	}
 }

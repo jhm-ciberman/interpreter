@@ -1,4 +1,4 @@
-import ASTBinOp from "./ast/expressions/ASTBinOp";
+import ASTBinOp from "./ast/expressions/binop/ASTBinOp";
 import ASTExpression from "./ast/expressions/ASTExpression";
 import ASTUnaryOp from "./ast/expressions/ASTUnaryOp";
 import ASTInt from "./ast/expressions/ASTInt";

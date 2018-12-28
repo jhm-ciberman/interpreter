@@ -1,8 +1,4 @@
-export const enum BinOpType {
-	ADDITION,
-	SUBSTRACTION,
-	MULTIPLICATION,
-	DIVISION,
+export const enum ComparationType {
 	LT,
 	LTEQ,
 	GT,
@@ -10,4 +6,4 @@ export const enum BinOpType {
 	EQ,
 	NOTEQ,
 }
-export default BinOpType;
+export default ComparationType;
