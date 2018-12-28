@@ -3,6 +3,7 @@ import ASTVar from "../expressions/ASTVar";
 import ASTStatement from "./ASTStatement";
 import ASTType from "../ASTType";
 import ASTExpression from "../expressions/ASTExpression";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTVarDec extends ASTStatement {
 
@@ -17,5 +18,9 @@ export default class ASTVarDec extends ASTStatement {
 		this.var = variable;
 		this.type = type;
 		this.value = value;
+	}
+
+	public log(logger: IASTLogger): void {
+		logger.printNode(this, " [" + this.var.name + "]");
 	}
 }

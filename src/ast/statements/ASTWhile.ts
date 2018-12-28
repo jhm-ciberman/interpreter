@@ -1,6 +1,7 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import ASTBlock from "./ASTBlock";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTWhile extends ASTStatement {
 
@@ -14,4 +15,12 @@ export default class ASTWhile extends ASTStatement {
 		this.then = st;
 	}
 
+	public log(logger: IASTLogger): void {
+		logger.printNode(this);
+		logger.printLine("Condition: ");
+		logger.visit(this.condition);
+		logger.printLine("Then: ");
+		logger.visit(this.then);
+	}
+	
 }

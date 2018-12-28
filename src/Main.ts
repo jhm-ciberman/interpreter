@@ -5,9 +5,9 @@ import Parser from "./parser/Parser";
 import { TokenType } from "./lexer/TokenType";
 import Token from "./lexer/Token";
 import Interpreter from "./output/interpreter/Interpreter";
-import ASTLogger from "./output/ASTLogger";
 import SyntaxError from "./parser/SyntaxError";
 import TokenStream from "./parser/TokenStream";
+import ASTLogger from "./output/ast/ASTLogger";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -46,8 +46,8 @@ export default class Main {
 		const ast = parser.parse();
 		if (ast) {
 			console.log("AST: ");
-			const logger = new ASTLogger();
-			console.log(logger.log(ast));
+			const logger = new ASTLogger(process.stdout);
+			logger.visit(ast);
 
 			console.log("OUTPUT:");
 			const interpreter = new Interpreter();

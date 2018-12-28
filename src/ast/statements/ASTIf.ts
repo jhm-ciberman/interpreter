@@ -1,6 +1,7 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import ASTBlock from "./ASTBlock";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTIf extends ASTStatement {
 
@@ -17,4 +18,15 @@ export default class ASTIf extends ASTStatement {
 		this.else = elseStatment;
 	}
 
+	public log(logger: IASTLogger): void {
+		logger.printNode(this);
+		logger.printLine("Condition:");
+		logger.visit(this.condition);
+		logger.printLine("Then: ");
+		logger.visit(this.then);
+		if (this.else) {
+			logger.printLine("Else: ");
+			logger.visit(this.else);
+		}
+	}
 }

@@ -1,4 +1,5 @@
 import ASTStatement from "./ASTStatement";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTBlock extends ASTStatement {
 
@@ -16,4 +17,9 @@ export default class ASTBlock extends ASTStatement {
 		return this._children[Symbol.iterator]();
 	}
 
+	public log(logger: IASTLogger): void {
+		for (const child of this.children) {
+			logger.visit(child);
+		}
+	}
 }

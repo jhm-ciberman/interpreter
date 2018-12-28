@@ -1,5 +1,6 @@
 import ASTVar from "../expressions/ASTVar";
 import ASTExpression from "../expressions/ASTExpression";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTAssign extends ASTExpression {
 
@@ -11,5 +12,10 @@ export default class ASTAssign extends ASTExpression {
 		super();
 		this.var = variable;
 		this.value = value;
+	}
+
+	public log(logger: IASTLogger): void {
+		logger.printNode(this, " [" + this.var.name + "]")
+		logger.visit(this.value);
 	}
 }

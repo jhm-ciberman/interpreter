@@ -1,4 +1,5 @@
 import ASTExpression from "./ASTExpression";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTInt extends ASTExpression {
 	
@@ -7,5 +8,9 @@ export default class ASTInt extends ASTExpression {
 	constructor(value: string) {
 		super();
 		this.value = parseInt(value);
+	}
+
+	public log(logger: IASTLogger): void {
+		return logger.printNode(this, " = " + this.value );
 	}
 }

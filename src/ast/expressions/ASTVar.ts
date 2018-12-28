@@ -1,6 +1,7 @@
 import Token from "../../lexer/Token";
 import ASTExpression from "./ASTExpression";
 import Symbol from "../../semantic/Symbol";
+import IASTLogger from "../../output/ast/IASTLogger";
 
 export default class ASTVar extends ASTExpression {
 
@@ -13,5 +14,9 @@ export default class ASTVar extends ASTExpression {
 
 	public get name(): string {
 		return this._token.value;
+	}
+
+	public log(logger: IASTLogger): void {
+		logger.printNode(this, " [" + this.name + "]");
 	}
 }
