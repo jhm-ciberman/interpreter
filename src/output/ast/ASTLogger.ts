@@ -1,5 +1,6 @@
 import IASTLogger from "./IASTLogger";
 import ASTNode from "../../ast/ASTNode";
+import ASTStatement from "../../ast/statements/ASTStatement";
 
 export default class ASTLogger implements IASTLogger {
 
@@ -10,7 +11,7 @@ export default class ASTLogger implements IASTLogger {
 		this._stream = stream;
 	}
 
-	public visit(ast: ASTNode): void {
+	public visit(ast: ASTStatement): void {
 		this._level++;
 		ast.log(this);
 		this._level--;

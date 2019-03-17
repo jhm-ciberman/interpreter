@@ -12,25 +12,31 @@ import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
 
 export default class Main {
 	public run(argv: string[]) {
-		if (argv.length > 2) {
-			fse.readFile(path.resolve(argv[2]), "utf8").then(value => {
+		if (argv.length < 2) {
+			console.log("Error: Expected 1 argument");
+			return;
+		}
+
+		fse.readFile(path.resolve(argv[2]), "utf8")
+			.then(source => {
 				try {
-					this.processFile(value);
+					this.processFile(source);
 				} catch (e) {
-					if (e instanceof SyntaxError) {
-						const lines = value.split('\n');
-						console.error(lines[e.line - 1])
-						console.error(" ".repeat(e.col - 1) + "^");
-					}
-					console.error(e);
+					this._printError(e, source);
 				}
-				
 			}).catch((e) => {
 				
 				console.error(e);
 			});
+	}
+
+	private _printError(e: Error, source: string): void {
+		if (e instanceof SyntaxError) {
+			const lines = source.split('\n');
+			console.error(lines[e.line - 1])
+			console.error(" ".repeat(e.col - 1) + "^");
 		}
-		
+		console.error(e);
 	}
 
 	public processFile(value: string) {

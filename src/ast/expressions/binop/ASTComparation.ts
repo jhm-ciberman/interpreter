@@ -4,6 +4,7 @@ import BinOpType from "../ComparationType";
 import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
 import IInterpreter from "../../../output/interpreter/IInterpreter";
+import SemanticError from "../../../semantic/exceptions/SemanticError";
 
 export default class ASTComparation extends ASTBinOp {
 
@@ -39,7 +40,7 @@ export default class ASTComparation extends ASTBinOp {
 			return analizer.TYPE_BOOL;
 		}
 
-		throw new SemanticError("Cannot compare. Types are incompatible: " + leftType.name + " and " + rightType.name);
+		throw new SemanticError(this, "Cannot compare. Types are incompatible: " + leftType.name + " and " + rightType.name);
     }
     
     public evaluate(interpreter: IInterpreter): any {

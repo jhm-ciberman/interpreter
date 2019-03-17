@@ -1,4 +1,3 @@
-import Token from "../../lexer/Token";
 import ASTVar from "../expressions/ASTVar";
 import ASTStatement from "./ASTStatement";
 import ASTType from "../ASTType";
@@ -7,6 +6,8 @@ import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import TypeAsignationError from "../../semantic/exceptions/TypeAsignationError";
+import TypeInferenceError from "../../semantic/exceptions/TypeInferenceError";
 
 export default class ASTVarDec extends ASTStatement {
 
@@ -27,25 +28,34 @@ export default class ASTVarDec extends ASTStatement {
 		logger.printNode(this, " [" + this.var.name + "]");
 	}
 
-	public analyze(analizer: ISemanticAnalyzer): void {
-		let decType: Type | undefined;
-		let infType: Type | undefined;
-		if (this.type) {
-			decType = analizer.typeFor(this.type.name);
-		} 
-		if (this.value) {
-			infType = this.value.resolveType(analizer)
-		}
-		if (decType && infType && decType !== infType) {
-			throw new Error(`Type "${decType.name}" is not asignable to type "${infType.name}"`);
-		}
-		/*if (decType === infType) {
-			if (decType === undefined) {
-			throw new Error("Type is not defined and cannot be infered");
+	public analyze(analyzer: ISemanticAnalyzer): void {
+		const decType = this.type ? analyzer.typeFor(this.type.name) : undefined;
+		const infType = this.value ? this.value.resolveType(analyzer) : undefined;
+		const type = this._inferType(decType, infType);
+		analyzer.declareVar(this.var.name, type);
+	}
+
+	/*
+	decType  	infType		type
+	0			0			0
+	0			1			infType
+	1			0			decType
+	1			1			=== => decType
+	*/
+	private _inferType(decType?: Type, infType?: Type): Type {
+		if (!decType) {
+			if (!infType) {
+				throw new TypeInferenceError(this);
 			}
-		}*/
-		
-		return undefined;
+			return infType;
+		}
+		if (!infType) {
+			return decType;
+		}
+		if (infType === decType) {
+			return decType;
+		}
+		throw new TypeAsignationError(this, decType, infType);
 	}
 
 	public execute(interpreter: IInterpreter): void {

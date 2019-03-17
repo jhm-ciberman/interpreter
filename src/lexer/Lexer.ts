@@ -1,6 +1,7 @@
 import Token from "./Token";
 import TokenType from "./TokenType";
 import Char from "./Char";
+import InvalidCharacterError from "./InvalidCharacterError";
 
 export default class Lexer {
 
@@ -97,13 +98,12 @@ export default class Lexer {
 			}
 		}
 
-		let t: Token;
 		const token = this._tokenMap.get(this._cc);
 		if (token !== undefined) {
 			this._advance();
 			return new Token(this._line, this._col, token, this._cc);
 		} else {
-			throw new Error(`Invalid character "${ this._cc }" at line ${ this._line } col ${ this._col }`);
+			throw new InvalidCharacterError(this._line, this._col, this._cc);
 		}
 	}
 
@@ -125,8 +125,10 @@ export default class Lexer {
 	/**
 	 * return the next character from the text buffer without incrementing the current position
 	 */
-	private _peek(): string {
-		return (this._pos + 1 > this._text.length - 1) ? "" : this._text[this._pos + 1];
+	private _peek(n: number = 1): string {
+		return (this._pos + n > this._text.length - 1) 
+			? "" 
+			: this._text[this._pos + n];
 	}
 
 	/**
@@ -134,7 +136,6 @@ export default class Lexer {
 	 */
 	private _integer(): Token {
 		let result = '';
-		let isN
 		while (this._cc !== '') {
 			if (Char.isDigit(this._cc)) {
 				result += this._cc;

@@ -78,10 +78,6 @@ export default class ExpresionParser {
 					TokenType.INTEGER,
 				]);
 		}
-
-
-
-		
 	}
 
 	/**

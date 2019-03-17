@@ -7,5 +7,6 @@ export default interface ISemanticAnalyzer {
 	readonly TYPE_BOOL: Type;
 
     typeFor(typeName: string): Type;
-    symbolFor(symbolName: string): Symbol;
+	symbolFor(symbolName: string): Symbol;
+	declareVar(symbolName: string, type: Type): Symbol;
 }
