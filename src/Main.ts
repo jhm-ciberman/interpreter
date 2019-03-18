@@ -9,6 +9,7 @@ import SyntaxError from "./parser/SyntaxError";
 import TokenStream from "./parser/TokenStream";
 import ASTLogger from "./output/ast/ASTLogger";
 import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
+import BytecodeGenerator from "./bytecode/BytecodeGenerator";
 
 export default class Main {
 	public run(argv: string[]) {
@@ -48,24 +49,21 @@ export default class Main {
 		const lexer = new Lexer(value);
 		const stream = new TokenStream(lexer);
 		const parser = new Parser(stream);
-		
-		
 		const ast = parser.parse();
-		if (ast) {
 
-			const analyzer = new SemanticAnalyzer();
-			analyzer.analyze(ast);
+		const analyzer = new SemanticAnalyzer();
+		analyzer.analyze(ast);
 
-			console.log("AST: ");
-			const logger = new ASTLogger(process.stdout);
-			logger.visit(ast);
+		console.log("AST: ");
+		const logger = new ASTLogger(process.stdout);
+		logger.visit(ast);
 
-			console.log("OUTPUT:");
-			const interpreter = new Interpreter();
-			console.log(interpreter.eval(ast));
-		} else {
-			console.log("> No ast");
-		}
+		//const generator = new BytecodeGenerator();
+		//generator.generate(ast);
+
+		console.log("OUTPUT:");
+		const interpreter = new Interpreter();
+		console.log(interpreter.eval(ast));
 	} 
 
 	private _printStream(value: string) {

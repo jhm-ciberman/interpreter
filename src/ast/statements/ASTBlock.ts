@@ -2,6 +2,9 @@ import ASTStatement from "./ASTStatement";
 import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import Op from "../../bytecode/Op";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import OpNoOp from "../../bytecode/OpNoOp";
 
 export default class ASTBlock extends ASTStatement {
 
@@ -32,9 +35,19 @@ export default class ASTBlock extends ASTStatement {
 	}
 
 	public execute(interpreter: IInterpreter): void {
-		let val: any;
 		for (const child of this.children) {
 			child.execute(interpreter);
 		}
+	}
+
+	public toBytecode(generator: IBytecodeGenerator): Op {
+		let last = new OpNoOp();
+		generator.pushOp(last);
+
+		for (const child of this.children) {
+			last = child.toBytecode(generator);
+		}
+
+		return last;
 	}
 }

@@ -4,6 +4,9 @@ import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
+import OpExpr from "../../bytecode/OpExpr";
 
 export default class ASTAssign extends ASTExpression {
 
@@ -32,4 +35,7 @@ export default class ASTAssign extends ASTExpression {
 		return value;
 	}
 
+	public toBytecode(generator: IBytecodeGenerator): OpExpr {
+		throw new Error("Bytecode generation not supported in float numbers");
+	}
 }

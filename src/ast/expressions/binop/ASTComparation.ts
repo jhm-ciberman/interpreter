@@ -5,6 +5,9 @@ import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
 import IInterpreter from "../../../output/interpreter/IInterpreter";
 import SemanticError from "../../../semantic/exceptions/SemanticError";
+import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
+import Op from "../../../bytecode/Op";
+import OpExpr from "../../../bytecode/OpExpr";
 
 export default class ASTComparation extends ASTBinOp {
 
@@ -61,5 +64,9 @@ export default class ASTComparation extends ASTBinOp {
 				return (left >= right);
 		}
 		return undefined;
-    }
+	}
+	
+	public toBytecode(generator: IBytecodeGenerator): Op {
+		throw new Error("Bytecode generation not supported in comparations");
+	}
 }

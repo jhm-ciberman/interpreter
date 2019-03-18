@@ -2,6 +2,8 @@ import ASTStatement from "../statements/ASTStatement";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
 
 export default abstract class ASTExpression extends ASTStatement {
 	
@@ -13,7 +15,9 @@ export default abstract class ASTExpression extends ASTStatement {
 
 	public abstract evaluate(interpreter: IInterpreter): any;
 
-	execute(interpreter: IInterpreter): void {
+	public execute(interpreter: IInterpreter): void {
 		interpreter.setLastEvalValue(this.evaluate(interpreter));
 	}
+
+	public abstract toBytecode(generator: IBytecodeGenerator): Op;
 }

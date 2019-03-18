@@ -4,6 +4,8 @@ import ASTBlock from "./ASTBlock";
 import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
 
 export default class ASTWhile extends ASTStatement {
 
@@ -39,4 +41,7 @@ export default class ASTWhile extends ASTStatement {
 		}
 	}
 
+	public toBytecode(generator: IBytecodeGenerator): Op {
+		throw new Error("Bytecode generation not supported in while statement");
+	}
 }

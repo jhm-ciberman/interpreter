@@ -4,6 +4,9 @@ import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
+import OpExpr from "../../bytecode/OpExpr";
 
 export default class ASTUnaryOp extends ASTExpression {
 
@@ -33,6 +36,10 @@ export default class ASTUnaryOp extends ASTExpression {
 			return +this.expr.evaluate(interpreter);
 		}
 		return undefined;
+	}
+
+	public toBytecode(generator: IBytecodeGenerator): OpExpr {
+		throw new Error("Bytecode generation not supported in unary operators");
 	}
 }
 

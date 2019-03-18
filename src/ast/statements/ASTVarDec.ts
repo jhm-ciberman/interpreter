@@ -8,6 +8,8 @@ import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
 import TypeAsignationError from "../../semantic/exceptions/TypeAsignationError";
 import TypeInferenceError from "../../semantic/exceptions/TypeInferenceError";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
 
 export default class ASTVarDec extends ASTStatement {
 
@@ -62,5 +64,9 @@ export default class ASTVarDec extends ASTStatement {
 		if (this.value) {
 			interpreter.setVar(this.var.name, this.value.evaluate(interpreter));
 		}
+	}
+
+	public toBytecode(generator: IBytecodeGenerator): Op {
+		throw new Error("Bytecode generation not supported in variable declaration statement");
 	}
 }

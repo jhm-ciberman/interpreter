@@ -3,6 +3,11 @@ import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
+import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
+import Op from "../../bytecode/Op";
+import OpMov from "../../bytecode/OpMov";
+import DataSourceValue from "../../bytecode/DataSourceValue";
+import OpExpr from "../../bytecode/OpExpr";
 
 export default class ASTInt extends ASTExpression {
 	
@@ -23,5 +28,9 @@ export default class ASTInt extends ASTExpression {
 
 	public evaluate(interpreter: IInterpreter): any {
 		return this.value;
+	}
+
+	public toBytecode(generator: IBytecodeGenerator): OpExpr {
+		return new OpMov(generator.requestRegister(), new DataSourceValue(this.value));
 	}
 }
