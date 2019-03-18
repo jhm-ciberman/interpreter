@@ -1,12 +1,12 @@
 import ASTExpression from "./ASTExpression";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
-import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpMov from "../../bytecode/OpMov";
 import DataSourceValue from "../../bytecode/DataSourceValue";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
+import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
 export default class ASTInt extends ASTExpression {
 	
@@ -25,8 +25,8 @@ export default class ASTInt extends ASTExpression {
 		return analizer.TYPE_INT;
 	}
 
-	public evaluate(interpreter: IInterpreter): any {
-		return this.value;
+	public evaluate(evaluator: INodeInterpreter): any {
+		return evaluator.visitInt(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): OpExpr {

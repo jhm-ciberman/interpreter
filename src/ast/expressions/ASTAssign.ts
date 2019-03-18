@@ -2,10 +2,10 @@ import ASTVar from "../expressions/ASTVar";
 import ASTExpression from "../expressions/ASTExpression";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
-import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
+import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
 export default class ASTAssign extends ASTExpression {
 
@@ -27,10 +27,8 @@ export default class ASTAssign extends ASTExpression {
 		return this.value.resolveType(analizer);
 	}
 
-	public evaluate(interpreter: IInterpreter): any {
-		const value = this.value.evaluate(interpreter);
-		interpreter.setVar(this.var.name, value);
-		return value;
+	public evaluate(evaluator: INodeInterpreter): any {
+		return evaluator.visitAssign(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): OpExpr {

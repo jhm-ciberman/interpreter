@@ -1,10 +1,10 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
-import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 import INodeVisitor from "../../INodeVisitor";
+import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
 export default class ASTIf extends ASTStatement {
 
@@ -25,6 +25,10 @@ export default class ASTIf extends ASTStatement {
 		visitor.visitIf(this);
 	}
 
+	public evaluate(visitor: INodeInterpreter): any {
+		visitor.visitIf(this);
+	}
+
 	public analyze(analizer: ISemanticAnalyzer): void {
 		this.condition.analyze(analizer)
 		if (this.then) {
@@ -32,14 +36,6 @@ export default class ASTIf extends ASTStatement {
 		}
 		if (this.else) {
 			this.else.analyze(analizer)
-		}
-	}
-
-	public execute(interpreter: IInterpreter): void {
-		if (this.condition.evaluate(interpreter) === true) {
-			this.then.execute(interpreter);
-		} else if (this.else) {
-			this.else.execute(interpreter);
 		}
 	}
 

@@ -3,12 +3,12 @@ import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
-import IInterpreter from "../../output/interpreter/IInterpreter";
 import TypeAsignationError from "../../semantic/exceptions/TypeAsignationError";
 import TypeInferenceError from "../../semantic/exceptions/TypeInferenceError";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 import INodeVisitor from "../../INodeVisitor";
+import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
 export default class ASTVarDec extends ASTStatement {
 
@@ -27,6 +27,10 @@ export default class ASTVarDec extends ASTStatement {
 
 	public accept(visitor: INodeVisitor): void {
 		visitor.visitVarDec(this);
+	}
+
+	public evaluate(visitor: INodeInterpreter): any {
+		return visitor.visitVarDec(this);
 	}
 
 	public analyze(analyzer: ISemanticAnalyzer): void {
@@ -57,12 +61,6 @@ export default class ASTVarDec extends ASTStatement {
 			return decType;
 		}
 		throw new TypeAsignationError(this, decType, infType);
-	}
-
-	public execute(interpreter: IInterpreter): void {
-		if (this.value) {
-			interpreter.setVar(this.var.name, this.value.evaluate(interpreter));
-		}
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): Op {

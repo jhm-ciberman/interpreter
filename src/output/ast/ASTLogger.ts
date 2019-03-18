@@ -57,17 +57,17 @@ export default class ASTLogger implements INodeVisitor {
 		}
 	}
 
-    public visitBlock(node: ASTBlock): void {
+		public visitBlock(node: ASTBlock): void {
 		for (const child of node.children) {
 			this._visit(child);
 		}
 	}
 
-    public visitVarDec(node: ASTVarDec): void {
+		public visitVarDec(node: ASTVarDec): void {
 		this._printNode(node, " [" + node.var.name + "]");
 	}
 
-    public visitWhile(node: ASTWhile): void {
+		public visitWhile(node: ASTWhile): void {
 		this._printNode(node);
 		this._printLine("Condition: ");
 		this._visit(node.condition);
@@ -80,20 +80,20 @@ export default class ASTLogger implements INodeVisitor {
 		this._visit(node.value);
 	}
 
-    public visitFloat(node: ASTFloat): void {
+		public visitFloat(node: ASTFloat): void {
 		this._printNode(node, " = " + node.value );
 	}
 
-    public visitInt(node: ASTInt): void {
+		public visitInt(node: ASTInt): void {
 		this._printNode(node, " = " + node.value );
 	}
 
-    public visitUnaryOp(node: ASTUnaryOp): void {
+		public visitUnaryOp(node: ASTUnaryOp): void {
 		this._printNode(node);
 		this._visit(node.expr);
 	}
 
-    public visitVar(node: ASTVar): void {
+		public visitVar(node: ASTVar): void {
 		this._printNode(node, " [" + node.name + "]");
 	}
 	
@@ -130,15 +130,15 @@ export default class ASTLogger implements INodeVisitor {
 		this._logBinOp(node);
 	}
 
-    public visitDivision(node: ASTDivision): void {
+	public visitDivision(node: ASTDivision): void {
 		this._logBinOp(node);
 	}
 	
-    public visitMultiplication(node: ASTMultiplication): void {
+	public visitMultiplication(node: ASTMultiplication): void {
 		this._logBinOp(node);
 	}
 	
-    public visitSubstraction(node: ASTSubstraction): void {
+	public visitSubstraction(node: ASTSubstraction): void {
 		this._logBinOp(node);
 	}
 	

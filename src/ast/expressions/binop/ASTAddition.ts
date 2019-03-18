@@ -1,9 +1,9 @@
 import ASTBinOp from "./ASTBinOp";
-import IInterpreter from "../../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
 import OpBinOp from "../../../bytecode/OpBinOp";
 import Op from "../../../bytecode/Op";
 import INodeVisitor from "../../../INodeVisitor";
+import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 
 export default class ASTAddition extends ASTBinOp {
 
@@ -11,8 +11,8 @@ export default class ASTAddition extends ASTBinOp {
 		visitor.visitAddition(this);
 	}
 
-    public evaluate(interpreter: IInterpreter): any {
-        return this.left.evaluate(interpreter) + this.right.evaluate(interpreter);
+    public evaluate(evaluator: INodeInterpreter): any {
+        return evaluator.visitAddition(this);
     }
 
     public toBytecode(generator: IBytecodeGenerator): Op {

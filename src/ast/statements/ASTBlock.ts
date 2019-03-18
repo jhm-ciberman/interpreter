@@ -1,10 +1,10 @@
 import ASTStatement from "./ASTStatement";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
-import IInterpreter from "../../output/interpreter/IInterpreter";
 import Op from "../../bytecode/Op";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpNoOp from "../../bytecode/OpNoOp";
 import INodeVisitor from "../../INodeVisitor";
+import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
 export default class ASTBlock extends ASTStatement {
 
@@ -27,15 +27,14 @@ export default class ASTBlock extends ASTStatement {
 		visitor.visitBlock(this);
 	}
 
+	public evaluate(visitor: INodeInterpreter): any {
+		return visitor.visitBlock(this);
+	}
+
+
 	public analyze(analizer: ISemanticAnalyzer): void {
 		for (const child of this.children) {
 			child.analyze(analizer);
-		}
-	}
-
-	public execute(interpreter: IInterpreter): void {
-		for (const child of this.children) {
-			child.execute(interpreter);
 		}
 	}
 

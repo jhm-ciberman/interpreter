@@ -1,17 +1,17 @@
 import ASTBinOp from "./ASTBinOp";
-import IInterpreter from "../../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
 import Op from "../../../bytecode/Op";
 import OpExpr from "../../../bytecode/OpExpr";
 import INodeVisitor from "../../../INodeVisitor";
+import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 
 export default class ASTDivision extends ASTBinOp {
 	public accept(visitor: INodeVisitor): void {
 		visitor.visitDivision(this);
 	}
 
-    public evaluate(interpreter: IInterpreter): any {
-        return this.left.evaluate(interpreter) / this.right.evaluate(interpreter);
+    public evaluate(evaluator: INodeInterpreter): any {
+        return evaluator.visitDivision(this);
     }
 
     public toBytecode(generator: IBytecodeGenerator): Op {
