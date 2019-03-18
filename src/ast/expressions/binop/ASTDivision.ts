@@ -10,7 +10,7 @@ export default class ASTDivision extends ASTBinOp {
 		visitor.visitDivision(this);
 	}
 
-    public evaluate(evaluator: INodeInterpreter): any {
+    public resolveValue(evaluator: INodeInterpreter): any {
         return evaluator.visitDivision(this);
     }
 

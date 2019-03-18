@@ -1,19 +1,22 @@
 import ASTStatement from "../statements/ASTStatement";
-import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
-import Type from "../../semantic/Type";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
+import INodeAnalyzer from "../../semantic/INodeAnalyzer";
+import Type from "../../semantic/Type";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 
-export default abstract class ASTExpression extends ASTStatement {
-	
-	public abstract resolveType(analizer: ISemanticAnalyzer): Type;
 
-	public analyze(analizer: ISemanticAnalyzer): void {
-		this.resolveType(analizer);
+export default abstract class ASTExpression extends ASTStatement {
+	public abstract toBytecode(generator: IBytecodeGenerator): Op;
+	public abstract resolveType(generator: INodeAnalyzer): Type;
+	
+	public analyze(analyzer: INodeAnalyzer): void {
+		this.resolveType(analyzer);
 	}
 
-	public abstract evaluate(evaluator: INodeInterpreter): any;
+	public abstract resolveValue(interpreter: INodeInterpreter): any;
 
-	public abstract toBytecode(generator: IBytecodeGenerator): Op;
+	public execute(interpreter: INodeInterpreter): void {
+		this.resolveValue(interpreter);
+	}
 }

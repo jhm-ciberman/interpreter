@@ -1,13 +1,12 @@
 import ASTBinOp from "./ASTBinOp";
 import ASTExpression from "../ASTExpression";
 import ComparationType from "../ComparationType";
-import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
-import SemanticError from "../../../semantic/exceptions/SemanticError";
 import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
 import Op from "../../../bytecode/Op";
 import INodeVisitor from "../../../INodeVisitor";
 import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
+import INodeAnalyzer from "../../../semantic/INodeAnalyzer";
 
 export default class ASTComparation extends ASTBinOp {
 
@@ -22,18 +21,11 @@ export default class ASTComparation extends ASTBinOp {
 		visitor.visitComparation(this);
 	}
 
-	public resolveType(analizer: ISemanticAnalyzer): Type {
-		var leftType = this.left.resolveType(analizer);
-		var rightType = this.left.resolveType(analizer);
-
-		if (leftType === rightType) {
-			return analizer.TYPE_BOOL;
-		}
-
-		throw new SemanticError(this, "Cannot compare. Types are incompatible: " + leftType.name + " and " + rightType.name);
+	public resolveType(analizer: INodeAnalyzer): Type {
+		return analizer.visitComparation(this);
     }
     
-    public evaluate(evaluator: INodeInterpreter): any {
+    public resolveValue(evaluator: INodeInterpreter): any {
         return evaluator.visitComparation(this);
     }
 	

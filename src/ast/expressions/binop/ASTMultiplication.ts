@@ -9,7 +9,7 @@ export default class ASTMultiplication extends ASTBinOp {
 		visitor.visitMultiplication(this);
 	}
 
-    public evaluate(evaluator: INodeInterpreter): any {
+    public resolveValue(evaluator: INodeInterpreter): any {
         return evaluator.visitMultiplication(this);
     }
 

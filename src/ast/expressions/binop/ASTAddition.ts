@@ -11,7 +11,7 @@ export default class ASTAddition extends ASTBinOp {
 		visitor.visitAddition(this);
 	}
 
-    public evaluate(evaluator: INodeInterpreter): any {
+    public resolveValue(evaluator: INodeInterpreter): any {
         return evaluator.visitAddition(this);
     }
 

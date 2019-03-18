@@ -9,7 +9,7 @@ export default class ASTSubstraction extends ASTBinOp {
 		visitor.visitSubstraction(this);
 	}
 
-    public evaluate(evaluator: INodeInterpreter): any {
+    public resolveValue(evaluator: INodeInterpreter): any {
         return evaluator.visitSubstraction(this);
     }
 

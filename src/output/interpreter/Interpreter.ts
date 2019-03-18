@@ -16,41 +16,46 @@ import ASTSubstraction from "../../ast/expressions/binop/ASTSubstraction";
 import ComparationType from "../../ast/expressions/ComparationType";
 import INodeInterpreter from "./INodeInterpreter";
 import UnaryOpType from "../../ast/expressions/UnaryOpType";
+import ASTExpression from "../../ast/expressions/ASTExpression";
 
 export default class Interpreter implements INodeInterpreter {
 
 	private _context: Context = new Context();
 
 	public visitIf(node: ASTIf): void {
-		if (node.condition.evaluate(this) === true) {
-			node.then.evaluate(this);
+		if (node.condition.resolveValue(this) === true) {
+			node.then.execute(this);
 		} else if (node.else) {
-			node.else.evaluate(this);
+			node.else.execute(this);
 		}
 	}
 
-	public visitBlock(node: ASTBlock): void {
+	public visitBlock(node: ASTBlock): any {
 		let lastValue: any = undefined;
 		for (const child of node.children) {
-			lastValue = child.evaluate(this);
+			if (child instanceof ASTExpression) {
+				lastValue = child.resolveValue(this);
+			} else {
+				child.execute(this);
+			}
 		}
 		return lastValue;
 	}
 
 	public visitVarDec(node: ASTVarDec): void {
 		if (node.value) {
-			this._context.insertVar(node.var.name, node.value.evaluate(this));
+			this._context.insertVar(node.var.name, node.value.resolveValue(this));
 		}
 	}
 
 	public visitWhile(node: ASTWhile): void {
-		while (node.condition.evaluate(this) === true) {
-			node.then.evaluate(this);
+		while (node.condition.resolveValue(this) === true) {
+			node.then.execute(this);
 		}
 	}
 
     public visitAssign(node: ASTAssign): number {
-		const value = node.value.evaluate(this);
+		const value = node.value.resolveValue(this);
 		this._context.insertVar(node.var.name, value);
         return value;
     }
@@ -65,9 +70,9 @@ export default class Interpreter implements INodeInterpreter {
     
     public visitUnaryOp(node: ASTUnaryOp): number {
 		if (node.type === UnaryOpType.MINUS) {
-			return -node.expr.evaluate(this);
+			return -node.expr.resolveValue(this);
 		} else {
-			return +node.expr.evaluate(this);
+			return +node.expr.resolveValue(this);
 		}
     }
     
@@ -76,12 +81,12 @@ export default class Interpreter implements INodeInterpreter {
     }
     
     public visitAddition(node: ASTAddition): number {
-        return node.left.evaluate(this) + node.right.evaluate(this);
+        return node.left.resolveValue(this) + node.right.resolveValue(this);
     }
     
     public visitComparation(node: ASTComparation): boolean {
-        const left = node.left.evaluate(this);
-		const right = node.right.evaluate(this);
+        const left = node.left.resolveValue(this);
+		const right = node.right.resolveValue(this);
 		switch (node.type) {
 			case ComparationType.EQ:
 				return (left === right);
@@ -99,14 +104,14 @@ export default class Interpreter implements INodeInterpreter {
     }
     
     public visitDivision(node: ASTDivision): number {
-        return node.left.evaluate(this) / node.right.evaluate(this);
+        return node.left.resolveValue(this) / node.right.resolveValue(this);
     }
     
     public visitMultiplication(node: ASTMultiplication): number {
-        return node.left.evaluate(this) * node.right.evaluate(this);
+        return node.left.resolveValue(this) * node.right.resolveValue(this);
     }
     
     public visitSubstraction(node: ASTSubstraction): number {
-        return node.left.evaluate(this) - node.right.evaluate(this);
+        return node.left.resolveValue(this) - node.right.resolveValue(this);
     }
 }

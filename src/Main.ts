@@ -63,7 +63,7 @@ export default class Main {
 
 		console.log("OUTPUT:");
 		const interpreter = new Interpreter();
-		console.log(ast.evaluate(interpreter));
+		console.log(interpreter.visitBlock(ast));
 	} 
 
 	private _printStream(value: string) {

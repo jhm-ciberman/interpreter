@@ -1,11 +1,11 @@
 import Token from "../../lexer/Token";
 import ASTExpression from "./ASTExpression";
-import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
+import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTVar extends ASTExpression {
 
@@ -23,13 +23,13 @@ export default class ASTVar extends ASTExpression {
 	public accept(visitor: INodeVisitor): void {
 		visitor.visitVar(this);
 	}
-
-	public resolveType(analizer: ISemanticAnalyzer): Type {
-		return analizer.TYPE_INT;
+	
+	public resolveValue(evaluator: INodeInterpreter): any {
+		return evaluator.visitVar(this);
 	}
 
-	public evaluate(evaluator: INodeInterpreter): any {
-		return evaluator.visitVar(this);
+	public resolveType(analyzer: INodeAnalyzer): Type {
+		return analyzer.visitVar(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): OpExpr {

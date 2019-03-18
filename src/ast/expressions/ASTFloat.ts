@@ -1,10 +1,10 @@
 import ASTExpression from "./ASTExpression";
-import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
-import Type from "../../semantic/Type";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
+import INodeAnalyzer from "../../semantic/INodeAnalyzer";
+import Type from "../../semantic/Type";
 
 export default class ASTFloat extends ASTExpression {
 	
@@ -19,12 +19,12 @@ export default class ASTFloat extends ASTExpression {
 		visitor.visitFloat(this);
 	}
 
-	public resolveType(analizer: ISemanticAnalyzer): Type {
-		return analizer.TYPE_FLOAT;
+	public resolveValue(evaluator: INodeInterpreter): any {
+		return evaluator.visitFloat(this);
 	}
 
-	public evaluate(evaluator: INodeInterpreter): any {
-		return evaluator.visitFloat(this);
+	public resolveType(analyzer: INodeAnalyzer): Type {
+		return analyzer.visitFloat(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): OpExpr {

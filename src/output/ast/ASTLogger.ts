@@ -37,8 +37,12 @@ export default class ASTLogger implements INodeVisitor {
 		this._stream.write("  ".repeat(this._level) + str);
 	}
 
+	private _getNodeName(node: ASTNode): string {
+        return node.constructor.name.split("AST").join("");
+    }
+
 	private _printNode(ast: ASTNode, str: string = ""): void {
-		this._print(ast.getNodeName() + str + "\n");
+		this._print(this._getNodeName(ast) + str + "\n");
 	}
 
 	private _printLine(str: string): void {

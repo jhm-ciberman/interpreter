@@ -1,11 +1,11 @@
 import ASTExpression from "./ASTExpression";
 import UnaryOpType from "./UnaryOpType";
-import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
+import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTUnaryOp extends ASTExpression {
 
@@ -23,12 +23,12 @@ export default class ASTUnaryOp extends ASTExpression {
 		visitor.visitUnaryOp(this);
 	}
 
-	public resolveType(analizer: ISemanticAnalyzer): Type {
-		return this.expr.resolveType(analizer);
+	public resolveValue(evaluator: INodeInterpreter): any {
+		return evaluator.visitUnaryOp(this);
 	}
 
-	public evaluate(evaluator: INodeInterpreter): any {
-		return evaluator.visitUnaryOp(this);
+	public resolveType(analyzer: INodeAnalyzer): Type {
+		return analyzer.visitUnaryOp(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): OpExpr {

@@ -1,5 +1,5 @@
 import ASTExpression from "../ASTExpression";
-import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
+import INodeAnalyzer from "../../../semantic/INodeAnalyzer";
 import Type from "../../../semantic/Type";
 
 export default abstract class ASTBinOp extends ASTExpression {
@@ -14,13 +14,8 @@ export default abstract class ASTBinOp extends ASTExpression {
 		this.right = right;
 	}
 
-	public resolveType(analizer: ISemanticAnalyzer): Type {
-		var leftType = this.left.resolveType(analizer);
-		var rightType = this.right.resolveType(analizer);
-
-		if (leftType === analizer.TYPE_FLOAT || rightType === analizer.TYPE_FLOAT) {
-			return analizer.TYPE_FLOAT;
-		}
-		return analizer.TYPE_INT;
+	public resolveType(analyzer: INodeAnalyzer): Type {
+		return analyzer.visitBinOp(this);
 	}
+
 }

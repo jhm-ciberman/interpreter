@@ -16,7 +16,7 @@ export default class SymbolTable<V> {
 			if (recursive && this._parent) {
 				return this._parent.lookup(name, recursive);
 			} else {
-				throw new Error("Invalid symbol");
+				throw new Error(`Undefined symbol "${name}"`);
 			}
 		}
 	}

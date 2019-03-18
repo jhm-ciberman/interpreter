@@ -1,10 +1,10 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
-import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
+import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTWhile extends ASTStatement {
 
@@ -22,16 +22,12 @@ export default class ASTWhile extends ASTStatement {
 		visitor.visitWhile(this);
 	}
 
-	public evaluate(visitor: INodeInterpreter): any {
+	public execute(visitor: INodeInterpreter): any {
 		visitor.visitWhile(this);
 	}
-	
-	public analyze(analizer: ISemanticAnalyzer): void {
-		this.condition.analyze(analizer);
-		if (this.then) {
-			this.then.analyze(analizer);
-		}
-		return undefined;
+
+	public analyze(analyzer: INodeAnalyzer): void {
+		analyzer.visitWhile(this);
 	}
 
 	public toBytecode(generator: IBytecodeGenerator): Op {
