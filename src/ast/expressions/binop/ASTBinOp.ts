@@ -1,9 +1,6 @@
 import ASTExpression from "../ASTExpression";
-import BinOpType from "../ComparationType";
-import IASTLogger from "../../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
-import IInterpreter from "../../../output/interpreter/IInterpreter";
 
 export default abstract class ASTBinOp extends ASTExpression {
 	
@@ -17,18 +14,6 @@ export default abstract class ASTBinOp extends ASTExpression {
 		this.right = right;
 	}
 
-	public log(logger: IASTLogger): void {
-		logger.printNode(this, " [" + this._operationName() + "]");
-		logger.printLine("Left: ");
-		logger.visit(this.left);
-		logger.printLine("Right: ");
-		logger.visit(this.right);
-	}
-
-	protected abstract _operationName(): string;
-
-	
-
 	public resolveType(analizer: ISemanticAnalyzer): Type {
 		var leftType = this.left.resolveType(analizer);
 		var rightType = this.right.resolveType(analizer);
@@ -38,6 +23,4 @@ export default abstract class ASTBinOp extends ASTExpression {
 		}
 		return analizer.TYPE_INT;
 	}
-
-	
 }

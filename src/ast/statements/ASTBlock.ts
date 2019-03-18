@@ -5,8 +5,10 @@ import IInterpreter from "../../output/interpreter/IInterpreter";
 import Op from "../../bytecode/Op";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import OpNoOp from "../../bytecode/OpNoOp";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTBlock extends ASTStatement {
+
 
 	private readonly _children: ASTStatement[];
 
@@ -22,10 +24,8 @@ export default class ASTBlock extends ASTStatement {
 		return this._children[Symbol.iterator]();
 	}
 
-	public log(logger: IASTLogger): void {
-		for (const child of this.children) {
-			logger.visit(child);
-		}
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitBlock(this);
 	}
 
 	public analyze(analizer: ISemanticAnalyzer): void {

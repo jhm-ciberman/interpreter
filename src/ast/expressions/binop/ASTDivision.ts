@@ -3,11 +3,12 @@ import IInterpreter from "../../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
 import Op from "../../../bytecode/Op";
 import OpExpr from "../../../bytecode/OpExpr";
+import INodeVisitor from "../../../INodeVisitor";
 
 export default class ASTDivision extends ASTBinOp {
-    protected _operationName(): string {
-        return "DIVISION";
-    }
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitDivision(this);
+	}
 
     public evaluate(interpreter: IInterpreter): any {
         return this.left.evaluate(interpreter) / this.right.evaluate(interpreter);

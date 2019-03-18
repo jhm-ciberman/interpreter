@@ -8,6 +8,7 @@ import Op from "../../bytecode/Op";
 import OpMov from "../../bytecode/OpMov";
 import DataSourceValue from "../../bytecode/DataSourceValue";
 import OpExpr from "../../bytecode/OpExpr";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTInt extends ASTExpression {
 	
@@ -18,8 +19,8 @@ export default class ASTInt extends ASTExpression {
 		this.value = parseInt(value);
 	}
 
-	public log(logger: IASTLogger): void {
-		return logger.printNode(this, " = " + this.value );
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitInt(this);
 	}
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {

@@ -1,8 +1,6 @@
 import ASTVar from "../expressions/ASTVar";
 import ASTStatement from "./ASTStatement";
-import ASTType from "../ASTType";
 import ASTExpression from "../expressions/ASTExpression";
-import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
@@ -10,28 +8,29 @@ import TypeAsignationError from "../../semantic/exceptions/TypeAsignationError";
 import TypeInferenceError from "../../semantic/exceptions/TypeInferenceError";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTVarDec extends ASTStatement {
 
 	public readonly var: ASTVar;
 
-	public readonly type: ASTType | null;
+	public readonly type: string | null;
 	
 	public readonly value: ASTExpression | null;
 
-	constructor(variable: ASTVar, type: ASTType | null, value: ASTExpression | null) {
+	constructor(variable: ASTVar, type: string | null, value: ASTExpression | null) {
 		super();
 		this.var = variable;
 		this.type = type;
 		this.value = value;
 	}
 
-	public log(logger: IASTLogger): void {
-		logger.printNode(this, " [" + this.var.name + "]");
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitVarDec(this);
 	}
 
 	public analyze(analyzer: ISemanticAnalyzer): void {
-		const decType = this.type ? analyzer.typeFor(this.type.name) : undefined;
+		const decType = this.type ? analyzer.typeFor(this.type) : undefined;
 		const infType = this.value ? this.value.resolveType(analyzer) : undefined;
 		const type = this._inferType(decType, infType);
 		analyzer.declareVar(this.var.name, type);

@@ -8,6 +8,5 @@ import Op from "../../bytecode/Op";
 export default abstract class ASTStatement extends ASTNode {
 	public abstract execute(interpreter: IInterpreter): void;
 	public abstract analyze(analizer: ISemanticAnalyzer): void;
-	public abstract log(logger: IASTLogger): void;
 	public abstract toBytecode(generator: IBytecodeGenerator): Op;
 }

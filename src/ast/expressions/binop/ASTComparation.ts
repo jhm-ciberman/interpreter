@@ -1,39 +1,26 @@
 import ASTBinOp from "./ASTBinOp";
 import ASTExpression from "../ASTExpression";
-import BinOpType from "../ComparationType";
+import ComparationType from "../ComparationType";
 import ISemanticAnalyzer from "../../../semantic/ISemanticAnalyzer";
 import Type from "../../../semantic/Type";
 import IInterpreter from "../../../output/interpreter/IInterpreter";
 import SemanticError from "../../../semantic/exceptions/SemanticError";
 import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
 import Op from "../../../bytecode/Op";
-import OpExpr from "../../../bytecode/OpExpr";
+import INodeVisitor from "../../../INodeVisitor";
 
 export default class ASTComparation extends ASTBinOp {
 
-	public readonly type: BinOpType;
+	public readonly type: ComparationType;
 
-    constructor(left: ASTExpression, type: BinOpType, right: ASTExpression) {
+    constructor(left: ASTExpression, type: ComparationType, right: ASTExpression) {
         super(left, right);
         this.type = type;
     }
-    
-    protected _operationName(): string {
-        switch (this.type) {
-			case BinOpType.EQ:
-				return "==";
-			case BinOpType.NOTEQ:
-				return "!=";
-			case BinOpType.LT:
-				return "<";
-			case BinOpType.LTEQ:
-				return "<=";
-			case BinOpType.GT:
-				return ">";
-			case BinOpType.GTEQ:
-				return ">=";
-		}
-    }
+
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitComparation(this);
+	}
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {
 		var leftType = this.left.resolveType(analizer);
@@ -50,17 +37,17 @@ export default class ASTComparation extends ASTBinOp {
         const left = this.left.evaluate(interpreter);
 		const right = this.right.evaluate(interpreter);
 		switch (this.type) {
-			case BinOpType.EQ:
+			case ComparationType.EQ:
 				return (left === right);
-			case BinOpType.NOTEQ:
+			case ComparationType.NOTEQ:
 				return (left !== right);
-			case BinOpType.LT:
+			case ComparationType.LT:
 				return (left < right);
-			case BinOpType.LTEQ:
+			case ComparationType.LTEQ:
 				return (left <= right);
-			case BinOpType.GT:
+			case ComparationType.GT:
 				return (left > right);
-			case BinOpType.GTEQ:
+			case ComparationType.GTEQ:
 				return (left >= right);
 		}
 		return undefined;

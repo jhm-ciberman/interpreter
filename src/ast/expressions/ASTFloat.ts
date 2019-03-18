@@ -6,6 +6,7 @@ import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 import OpExpr from "../../bytecode/OpExpr";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTFloat extends ASTExpression {
 	
@@ -16,8 +17,8 @@ export default class ASTFloat extends ASTExpression {
 		this.value = parseFloat(integer + "." + real);
 	}
 
-	public log(logger: IASTLogger): void {
-		return logger.printNode(this, " = " + this.value );
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitFloat(this);
 	}
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {

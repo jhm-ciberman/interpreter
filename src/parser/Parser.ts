@@ -7,7 +7,6 @@ import ASTVar from "../ast/expressions/ASTVar";
 import ASTStatement from "../ast/statements/ASTStatement";
 import ASTBlock from "../ast/statements/ASTBlock";
 import ASTIf from "../ast/statements/ASTIf";
-import ASTType from "../ast/ASTType";
 import ASTWhile from "../ast/statements/ASTWhile";
 import TokenStream from "./TokenStream";
 import ExpresionParser from "./ExpresionParser";
@@ -46,7 +45,7 @@ export default class Parser {
 		let type = null, value = null;
 		if (this._stream.accept(TokenType.COLON)) {
 			const token = this._stream.expect(TokenType.ID);
-			type = new ASTType(token.value);
+			type = token.value;
 		}
 		if (this._stream.accept(TokenType.ASSIGN)) {
 			value = this._expr();

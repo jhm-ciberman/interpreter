@@ -7,6 +7,7 @@ import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 import OpExpr from "../../bytecode/OpExpr";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTVar extends ASTExpression {
 
@@ -21,8 +22,8 @@ export default class ASTVar extends ASTExpression {
 		return this._token.value;
 	}
 
-	public log(logger: IASTLogger): void {
-		logger.printNode(this, " [" + this.name + "]");
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitVar(this);
 	}
 
 	public resolveType(analizer: ISemanticAnalyzer): Type {

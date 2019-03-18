@@ -6,6 +6,7 @@ import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
+import INodeVisitor from "../../INodeVisitor";
 
 export default class ASTIf extends ASTStatement {
 
@@ -22,16 +23,8 @@ export default class ASTIf extends ASTStatement {
 		this.else = elseStatment;
 	}
 
-	public log(logger: IASTLogger): void {
-		logger.printNode(this);
-		logger.printLine("Condition:");
-		logger.visit(this.condition);
-		logger.printLine("Then: ");
-		logger.visit(this.then);
-		if (this.else) {
-			logger.printLine("Else: ");
-			logger.visit(this.else);
-		}
+	public accept(visitor: INodeVisitor): void {
+		visitor.visitIf(this);
 	}
 
 	public analyze(analizer: ISemanticAnalyzer): void {
