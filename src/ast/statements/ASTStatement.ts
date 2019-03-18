@@ -1,7 +1,6 @@
 import ASTNode from "../ASTNode";
 import IInterpreter from "../../output/interpreter/IInterpreter";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
-import IASTLogger from "../../output/ast/IASTLogger";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
 import Op from "../../bytecode/Op";
 

@@ -1,7 +1,5 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
-import ASTBlock from "./ASTBlock";
-import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";

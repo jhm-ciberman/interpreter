@@ -1,11 +1,9 @@
 import ASTExpression from "./ASTExpression";
 import UnaryOpType from "./UnaryOpType";
-import IASTLogger from "../../output/ast/IASTLogger";
 import ISemanticAnalyzer from "../../semantic/ISemanticAnalyzer";
 import Type from "../../semantic/Type";
 import IInterpreter from "../../output/interpreter/IInterpreter";
 import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import Op from "../../bytecode/Op";
 import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 

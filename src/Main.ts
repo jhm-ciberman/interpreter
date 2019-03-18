@@ -56,7 +56,7 @@ export default class Main {
 
 		console.log("AST: ");
 		const logger = new ASTLogger(process.stdout);
-		logger.visit(ast);
+		ast.accept(logger);
 
 		//const generator = new BytecodeGenerator();
 		//generator.generate(ast);
