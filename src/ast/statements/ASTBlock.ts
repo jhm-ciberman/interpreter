@@ -1,7 +1,4 @@
 import ASTStatement from "./ASTStatement";
-import Op from "../../bytecode/Op";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import OpNoOp from "../../bytecode/OpNoOp";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
@@ -35,14 +32,7 @@ export default class ASTBlock extends ASTStatement {
 		analyzer.visitBlock(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): Op {
-		let last = new OpNoOp();
-		generator.pushOp(last);
-
-		for (const child of this.children) {
-			last = child.toBytecode(generator);
-		}
-
-		return last;
-	}
+	public toBytecode(generator: INodeVisitor): void {
+        generator.visitBlock(this);
+    }
 }

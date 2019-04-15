@@ -1,7 +1,4 @@
 import ASTBinOp from "./ASTBinOp";
-import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
-import Op from "../../../bytecode/Op";
-import OpExpr from "../../../bytecode/OpExpr";
 import INodeVisitor from "../../../INodeVisitor";
 import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 
@@ -14,7 +11,7 @@ export default class ASTDivision extends ASTBinOp {
         return evaluator.visitDivision(this);
     }
 
-    public toBytecode(generator: IBytecodeGenerator): Op {
-		throw new Error("Bytecode generation not supported in divisions");
-	}
+    public toBytecode(generator: INodeVisitor): void {
+        generator.visitDivision(this);
+    }
 }

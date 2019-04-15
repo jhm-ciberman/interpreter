@@ -1,10 +1,9 @@
 import ASTExpression from "./ASTExpression";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 import Type from "../../semantic/Type";
+import Op from "../../bytecode/Op";
 
 export default class ASTFloat extends ASTExpression {
 	
@@ -27,7 +26,7 @@ export default class ASTFloat extends ASTExpression {
 		return analyzer.visitFloat(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): OpExpr {
-		throw new Error("Bytecode generation not supported in float numbers");
-	}
+	public toBytecode(generator: INodeVisitor): Op[] {
+        return generator.visitFloat(this);
+    }
 }

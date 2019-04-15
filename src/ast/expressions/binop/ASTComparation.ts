@@ -2,8 +2,6 @@ import ASTBinOp from "./ASTBinOp";
 import ASTExpression from "../ASTExpression";
 import ComparationType from "../ComparationType";
 import Type from "../../../semantic/Type";
-import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
-import Op from "../../../bytecode/Op";
 import INodeVisitor from "../../../INodeVisitor";
 import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../../semantic/INodeAnalyzer";
@@ -29,7 +27,7 @@ export default class ASTComparation extends ASTBinOp {
         return evaluator.visitComparation(this);
     }
 	
-	public toBytecode(generator: IBytecodeGenerator): Op {
-		throw new Error("Bytecode generation not supported in comparations");
-	}
+    public toBytecode(generator: INodeVisitor): void {
+        generator.visitComparation(this);
+    }
 }

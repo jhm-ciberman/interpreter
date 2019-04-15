@@ -1,11 +1,10 @@
 import ASTExpression from "./ASTExpression";
 import UnaryOpType from "./UnaryOpType";
 import Type from "../../semantic/Type";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
+import Op from "../../bytecode/Op";
 
 export default class ASTUnaryOp extends ASTExpression {
 
@@ -31,8 +30,8 @@ export default class ASTUnaryOp extends ASTExpression {
 		return analyzer.visitUnaryOp(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): OpExpr {
-		throw new Error("Bytecode generation not supported in unary operators");
-	}
+	public toBytecode(generator: INodeVisitor): Op[] {
+        return generator.visitUnaryOp(this);
+    }
 }
 

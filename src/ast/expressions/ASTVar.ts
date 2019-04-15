@@ -1,8 +1,6 @@
 import Token from "../../lexer/Token";
 import ASTExpression from "./ASTExpression";
 import Type from "../../semantic/Type";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
@@ -32,7 +30,7 @@ export default class ASTVar extends ASTExpression {
 		return analyzer.visitVar(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): OpExpr {
-		throw new Error("Bytecode generation not supported in variables");
-	}
+	public toBytecode(generator: INodeVisitor): void {
+        generator.visitVar(this);
+    }
 }

@@ -1,6 +1,4 @@
 import ASTBinOp from "./ASTBinOp";
-import IBytecodeGenerator from "../../../bytecode/IBytecodeGenerator";
-import Op from "../../../bytecode/Op";
 import INodeVisitor from "../../../INodeVisitor";
 import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 
@@ -13,7 +11,7 @@ export default class ASTMultiplication extends ASTBinOp {
         return evaluator.visitMultiplication(this);
     }
 
-    public toBytecode(generator: IBytecodeGenerator): Op {
-		throw new Error("Bytecode generation not supported in multiplications");
-	}
+    public toBytecode(generator: INodeVisitor): void {
+        generator.visitMultiplication(this);
+    }
 }

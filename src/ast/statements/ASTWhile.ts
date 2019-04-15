@@ -1,7 +1,5 @@
 import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import Op from "../../bytecode/Op";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
@@ -30,7 +28,7 @@ export default class ASTWhile extends ASTStatement {
 		analyzer.visitWhile(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): Op {
-		throw new Error("Bytecode generation not supported in while statement");
-	}
+	public toBytecode(generator: INodeVisitor): void {
+        generator.visitWhile(this);
+    }
 }

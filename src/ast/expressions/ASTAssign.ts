@@ -1,11 +1,10 @@
 import ASTVar from "../expressions/ASTVar";
 import ASTExpression from "../expressions/ASTExpression";
 import Type from "../../semantic/Type";
-import IBytecodeGenerator from "../../bytecode/IBytecodeGenerator";
-import OpExpr from "../../bytecode/OpExpr";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 import INodeAnalyzer from "../../semantic/INodeAnalyzer";
+import Op from "../../bytecode/Op";
 
 export default class ASTAssign extends ASTExpression {
 
@@ -31,7 +30,7 @@ export default class ASTAssign extends ASTExpression {
 		return analyzer.visitAssign(this);
 	}
 
-	public toBytecode(generator: IBytecodeGenerator): OpExpr {
-		throw new Error("Bytecode generation not supported in float numbers");
-	}
+	public toBytecode(generator: INodeVisitor): Op[] {
+        return generator.visitAssign(this);
+    }
 }
