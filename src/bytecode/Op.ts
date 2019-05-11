@@ -1,3 +1,3 @@
 export default abstract class Op {
-    public next?: Op;
+    public abstract toString(): string;
 }

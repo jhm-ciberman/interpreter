@@ -102,7 +102,7 @@ export default class ASTLogger implements INodeVisitor {
 	}
 	
 	protected _comparationSymbol(node: ASTComparation): string {
-		switch (node.type) {
+		switch (node.comparationType) {
 			case ComparationType.EQ:
 				return "==";
 			case ComparationType.NOTEQ:

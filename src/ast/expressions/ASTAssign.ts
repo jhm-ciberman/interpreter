@@ -1,10 +1,7 @@
 import ASTVar from "../expressions/ASTVar";
 import ASTExpression from "../expressions/ASTExpression";
-import Type from "../../semantic/Type";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
-import Op from "../../bytecode/Op";
 
 export default class ASTAssign extends ASTExpression {
 
@@ -26,11 +23,7 @@ export default class ASTAssign extends ASTExpression {
 		return evaluator.visitAssign(this);
 	}
 
-	public resolveType(analyzer: INodeAnalyzer): Type {
-		return analyzer.visitAssign(this);
-	}
-
-	public toBytecode(generator: INodeVisitor): Op[] {
+	public toBytecode(generator: INodeVisitor): void {
         return generator.visitAssign(this);
     }
 }

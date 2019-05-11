@@ -1,7 +1,6 @@
 import ASTStatement from "./ASTStatement";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTBlock extends ASTStatement {
 
@@ -26,10 +25,6 @@ export default class ASTBlock extends ASTStatement {
 
 	public execute(visitor: INodeInterpreter): any {
 		return visitor.visitBlock(this);
-	}
-
-	public analyze(analyzer: INodeAnalyzer): void {
-		analyzer.visitBlock(this);
 	}
 
 	public toBytecode(generator: INodeVisitor): void {

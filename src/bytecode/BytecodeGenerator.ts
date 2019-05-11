@@ -1,6 +1,5 @@
 import Op from "./Op";
 import ASTStatement from "../ast/statements/ASTStatement";
-import DataSourceRegister from "./DataSourceRegister";
 import INodeVisitor from "../INodeVisitor";
 import ASTIf from "../ast/statements/ASTIf";
 import ASTBlock from "../ast/statements/ASTBlock";
@@ -16,27 +15,19 @@ import ASTComparation from "../ast/expressions/binop/ASTComparation";
 import ASTDivision from "../ast/expressions/binop/ASTDivision";
 import ASTMultiplication from "../ast/expressions/binop/ASTMultiplication";
 import ASTSubstraction from "../ast/expressions/binop/ASTSubstraction";
-import OpNoOp from "./OpNoOp";
 import OpBinOp from "./OpBinOp";
-import OpMov from "./OpMov";
-import DataSourceValue from "./DataSourceValue";
+import Symbol from "../semantic/Symbol";
+import Type from "../semantic/Type";
+import OpAssign from "./OpAssign";
 
 export default class BytecodeGenerator implements INodeVisitor {
     
     private _operations: Op[] = [];
-
-    private _registers: DataSourceRegister[] = [];
-
-    constructor(regCount: number) {
-        for (let i = 0; i < regCount; i++) {
-            this._registers[i] = new DataSourceRegister(i);
-        }
-        this._registers = this._registers.reverse();
-    }
+    private _temps: Symbol[] = [];
 
     public generate(node: ASTStatement): Op[] {
         this._operations = [];
-        node.toBytecode(this);
+        node.accept(this);
         return this._operations;
     }
     
@@ -44,16 +35,15 @@ export default class BytecodeGenerator implements INodeVisitor {
         this._operations.push(op);
     }
 
-    private _requestRegister(): DataSourceRegister {
-        const reg = this._registers.pop();
-        if (!reg) {
-            throw new Error("No registers available");
-        }
-        return reg;
+    private _requestTemp(type: Type) {
+        const name = "T" + this._temps.length;
+        const s = new Symbol(name, type);
+        this._temps.push(s);
+        return s;
     }
 
-    private _freeRegister(reg: DataSourceRegister) {
-        this._registers.push(reg);
+    private get _lastTemp(): Symbol {
+        return this._temps[this._temps.length - 1];
     }
 
     private _notSupported(name: string) {
@@ -65,11 +55,8 @@ export default class BytecodeGenerator implements INodeVisitor {
     }
 
     public visitBlock(node: ASTBlock): void {
-        let last = new OpNoOp();
-		this._pushOp(last);
-
 		for (const child of node.children) {
-			child.toBytecode(this);
+			child.accept(this);
 		}
     }
 
@@ -86,12 +73,13 @@ export default class BytecodeGenerator implements INodeVisitor {
     }
 
     public visitFloat(node: ASTFloat): void {
-        this._notSupported("float");
+        const temp = this._requestTemp(node.type);
+        this._pushOp(new OpAssign(temp, node.value));
     }
 
     public visitInt(node: ASTInt): void {
-        const reg = this._requestRegister();
-        return [new OpMov(reg, new DataSourceValue(node.value))];
+        const temp = this._requestTemp(node.type);
+        this._pushOp(new OpAssign(temp, node.value));
     }
 
     public visitUnaryOp(node: ASTUnaryOp): void {
@@ -103,9 +91,17 @@ export default class BytecodeGenerator implements INodeVisitor {
     }
 
     public visitAddition(node: ASTAddition): void {
-        const left = node.left.toBytecode(this);
-        const right = node.right.toBytecode(this);
-		return new OpBinOp("ADD", left, right);
+        
+        node.left.accept(this);
+        const left = this._lastTemp;
+        
+        node.right.accept(this);
+        const right = this._lastTemp;
+
+        const temp = this._requestTemp(node.type);
+
+        this._pushOp(new OpBinOp(temp, "ADD", left, right));
+		
     }
 
     public visitComparation(node: ASTComparation): void {

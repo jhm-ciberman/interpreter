@@ -3,7 +3,6 @@ import ASTStatement from "./ASTStatement";
 import ASTExpression from "../expressions/ASTExpression";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTVarDec extends ASTStatement {
 
@@ -26,10 +25,6 @@ export default class ASTVarDec extends ASTStatement {
 
 	public execute(visitor: INodeInterpreter): any {
 		return visitor.visitVarDec(this);
-	}
-
-	public analyze(analyzer: INodeAnalyzer): void {
-		analyzer.visitVarDec(this);
 	}
 
 	public toBytecode(generator: INodeVisitor): void {

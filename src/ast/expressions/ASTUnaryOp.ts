@@ -3,18 +3,16 @@ import UnaryOpType from "./UnaryOpType";
 import Type from "../../semantic/Type";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
-import Op from "../../bytecode/Op";
 
 export default class ASTUnaryOp extends ASTExpression {
 
 	public readonly expr: ASTExpression;
 
-	public readonly type: UnaryOpType;
+	public readonly comparationType: UnaryOpType;
 
 	constructor(type: UnaryOpType, expr: ASTExpression) {
 		super();
-		this.type = type;
+		this.comparationType = type;
 		this.expr = expr;
 	}
 
@@ -26,11 +24,7 @@ export default class ASTUnaryOp extends ASTExpression {
 		return evaluator.visitUnaryOp(this);
 	}
 
-	public resolveType(analyzer: INodeAnalyzer): Type {
-		return analyzer.visitUnaryOp(this);
-	}
-
-	public toBytecode(generator: INodeVisitor): Op[] {
+	public toBytecode(generator: INodeVisitor): void {
         return generator.visitUnaryOp(this);
     }
 }

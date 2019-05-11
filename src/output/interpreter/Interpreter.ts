@@ -69,7 +69,7 @@ export default class Interpreter implements INodeInterpreter {
     }
     
     public visitUnaryOp(node: ASTUnaryOp): number {
-		if (node.type === UnaryOpType.MINUS) {
+		if (node.comparationType === UnaryOpType.MINUS) {
 			return -node.expr.resolveValue(this);
 		} else {
 			return +node.expr.resolveValue(this);
@@ -87,7 +87,7 @@ export default class Interpreter implements INodeInterpreter {
     public visitComparation(node: ASTComparation): boolean {
         const left = node.left.resolveValue(this);
 		const right = node.right.resolveValue(this);
-		switch (node.type) {
+		switch (node.comparationType) {
 			case ComparationType.EQ:
 				return (left === right);
 			case ComparationType.NOTEQ:

@@ -12,7 +12,7 @@ import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
 import BytecodeGenerator from "./bytecode/BytecodeGenerator";
 
 export default class Main {
-	public run(argv: string[]) {
+	public static main(argv: string[]) {
 		if (argv.length < 2) {
 			console.log("Error: Expected 1 argument");
 			return;
@@ -20,10 +20,11 @@ export default class Main {
 
 		fse.readFile(path.resolve(argv[2]), "utf8")
 			.then(source => {
+				const inst = new Main();
 				try {
-					this.processFile(source);
+					inst.processFile(source);
 				} catch (e) {
-					this._printError(e, source);
+					inst._printError(e, source);
 				}
 			}).catch((e) => {
 				
@@ -58,8 +59,10 @@ export default class Main {
 		const logger = new ASTLogger(process.stdout);
 		ast.accept(logger);
 
-		//const generator = new BytecodeGenerator();
-		//generator.generate(ast);
+		const generator = new BytecodeGenerator();
+		const opList = generator.generate(ast);
+		console.log("OPLIST:");
+		opList.forEach(op => console.log(op.toString()));
 
 		console.log("OUTPUT:");
 		const interpreter = new Interpreter();

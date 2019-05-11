@@ -1,9 +1,7 @@
 import Token from "../../lexer/Token";
 import ASTExpression from "./ASTExpression";
-import Type from "../../semantic/Type";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
 
 export default class ASTVar extends ASTExpression {
 
@@ -24,10 +22,6 @@ export default class ASTVar extends ASTExpression {
 	
 	public resolveValue(evaluator: INodeInterpreter): any {
 		return evaluator.visitVar(this);
-	}
-
-	public resolveType(analyzer: INodeAnalyzer): Type {
-		return analyzer.visitVar(this);
 	}
 
 	public toBytecode(generator: INodeVisitor): void {

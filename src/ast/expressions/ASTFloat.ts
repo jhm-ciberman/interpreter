@@ -1,9 +1,6 @@
 import ASTExpression from "./ASTExpression";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
-import INodeAnalyzer from "../../semantic/INodeAnalyzer";
-import Type from "../../semantic/Type";
-import Op from "../../bytecode/Op";
 
 export default class ASTFloat extends ASTExpression {
 	
@@ -22,11 +19,7 @@ export default class ASTFloat extends ASTExpression {
 		return evaluator.visitFloat(this);
 	}
 
-	public resolveType(analyzer: INodeAnalyzer): Type {
-		return analyzer.visitFloat(this);
-	}
-
-	public toBytecode(generator: INodeVisitor): Op[] {
+	public toBytecode(generator: INodeVisitor): void {
         return generator.visitFloat(this);
     }
 }

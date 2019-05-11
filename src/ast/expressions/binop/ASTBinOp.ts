@@ -1,7 +1,4 @@
 import ASTExpression from "../ASTExpression";
-import INodeAnalyzer from "../../../semantic/INodeAnalyzer";
-import Type from "../../../semantic/Type";
-import INodeVisitor from "../../../INodeVisitor";
 
 export default abstract class ASTBinOp extends ASTExpression {
 	
@@ -14,9 +11,4 @@ export default abstract class ASTBinOp extends ASTExpression {
 		this.left = left;
 		this.right = right;
 	}
-
-	public resolveType(analyzer: INodeAnalyzer): Type {
-		return analyzer.visitBinOp(this);
-	}
-
 }
