@@ -1,7 +1,7 @@
 import ASTBinOp from "./ASTBinOp";
 import ASTExpression from "../ASTExpression";
 import ComparationType from "../ComparationType";
-import Type from "../../../semantic/Type";
+import Type from "../../../symbols/Type";
 import INodeVisitor from "../../../INodeVisitor";
 import INodeInterpreter from "../../../output/interpreter/INodeInterpreter";
 

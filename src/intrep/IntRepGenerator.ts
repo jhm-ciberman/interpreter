@@ -1,4 +1,4 @@
-import Op from "./Op";
+import Op from "./op/Op";
 import ASTStatement from "../ast/statements/ASTStatement";
 import INodeVisitor from "../INodeVisitor";
 import ASTIf from "../ast/statements/ASTIf";
@@ -15,39 +15,48 @@ import ASTComparation from "../ast/expressions/binop/ASTComparation";
 import ASTDivision from "../ast/expressions/binop/ASTDivision";
 import ASTMultiplication from "../ast/expressions/binop/ASTMultiplication";
 import ASTSubstraction from "../ast/expressions/binop/ASTSubstraction";
-import OpBinOp from "./OpBinOp";
-import Symbol from "../semantic/Symbol";
-import Type from "../semantic/Type";
-import OpAssign from "./OpAssign";
+import OpBinOp from "./op/binop/OpBinOp";
+import SymbolElement from "../symbols/SymbolElement";
+import OpAssign from "./op/OpAssignInt";
+import Scope from "../symbols/Scope";
+import OpAssignInt from "./op/OpAssignInt";
+import ASTExpression from "../ast/expressions/ASTExpression";
+import OpAdd from "./op/binop/OpAdd";
+import ASTBinOp from "../ast/expressions/binop/ASTBinOp";
+import OpSubstract from "./op/binop/OpSubstract";
+import OpRet from "./op/OpRet";
 
-export default class BytecodeGenerator implements INodeVisitor {
+export default class IntRepGenerator implements INodeVisitor {
     
     private _operations: Op[] = [];
-    private _temps: Symbol[] = [];
+
+    private _scope: Scope;
+
+    constructor(scope: Scope) {
+        this._scope = scope;
+    }
 
     public generate(node: ASTStatement): Op[] {
         this._operations = [];
         node.accept(this);
+
+        // This adds an implicit return at the end. It will be removed in the future
+        const lastOp = this._operations[this._operations.length - 1];
+        if (lastOp instanceof OpBinOp) {
+            this._operations.push(new OpRet(lastOp.left));
+        }
+
         return this._operations;
     }
-    
-    private _pushOp(op: Op): void {
-        this._operations.push(op);
-    }
 
-    private _requestTemp(type: Type) {
-        const name = "T" + this._temps.length;
-        const s = new Symbol(name, type);
-        this._temps.push(s);
-        return s;
-    }
-
-    private get _lastTemp(): Symbol {
-        return this._temps[this._temps.length - 1];
+    private _temp(node: ASTExpression): SymbolElement {
+        const temp = this._scope.declareTemp(node.type);
+        node.temp = temp;
+        return temp;
     }
 
     private _notSupported(name: string) {
-        throw new Error(`Bytecode generation not supported in ${ name } statement`);
+        throw new Error(`Intermediate Representation generation not supported in ${ name } statement`);
     }
 
     public visitIf(node: ASTIf): void {
@@ -73,13 +82,11 @@ export default class BytecodeGenerator implements INodeVisitor {
     }
 
     public visitFloat(node: ASTFloat): void {
-        const temp = this._requestTemp(node.type);
-        this._pushOp(new OpAssign(temp, node.value));
+        this._notSupported("float");
     }
 
     public visitInt(node: ASTInt): void {
-        const temp = this._requestTemp(node.type);
-        this._pushOp(new OpAssign(temp, node.value));
+        this._operations.push(new OpAssignInt(this._temp(node), node.value))
     }
 
     public visitUnaryOp(node: ASTUnaryOp): void {
@@ -89,19 +96,10 @@ export default class BytecodeGenerator implements INodeVisitor {
     public visitVar(node: ASTVar): void {
         this._notSupported("variable");
     }
-
     public visitAddition(node: ASTAddition): void {
-        
         node.left.accept(this);
-        const left = this._lastTemp;
-        
         node.right.accept(this);
-        const right = this._lastTemp;
-
-        const temp = this._requestTemp(node.type);
-
-        this._pushOp(new OpBinOp(temp, "ADD", left, right));
-		
+        this._operations.push(new OpAdd(this._temp(node), node.left.temp, node.right.temp));
     }
 
     public visitComparation(node: ASTComparation): void {
@@ -117,7 +115,9 @@ export default class BytecodeGenerator implements INodeVisitor {
     }
 
     public visitSubstraction(node: ASTSubstraction): void {
-        this._notSupported("substraction");
+        node.left.accept(this);
+        node.right.accept(this);
+        this._operations.push(new OpSubstract(this._temp(node), node.left.temp, node.right.temp));
     }
 
 }

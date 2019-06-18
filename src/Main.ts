@@ -9,7 +9,10 @@ import SyntaxError from "./parser/SyntaxError";
 import TokenStream from "./parser/TokenStream";
 import ASTLogger from "./output/ast/ASTLogger";
 import SemanticAnalyzer from "./semantic/SemanticAnalyzer";
-import BytecodeGenerator from "./bytecode/BytecodeGenerator";
+import IntRepGenerator from "./intrep/IntRepGenerator";
+import AssamblyBuilder from "./assambly/AssamblyBuilder";
+import FASMCompiler from "./assambly/FASMCompiler";
+import AssamblyGenerator from "./assambly/AssamblyGenerator";
 
 export default class Main {
 	public static main(argv: string[]) {
@@ -59,10 +62,22 @@ export default class Main {
 		const logger = new ASTLogger(process.stdout);
 		ast.accept(logger);
 
-		const generator = new BytecodeGenerator();
+		const generator = new IntRepGenerator(analyzer.globalScope);
 		const opList = generator.generate(ast);
 		console.log("OPLIST:");
-		opList.forEach(op => console.log(op.toString()));
+		opList.forEach(op => {
+			console.log(op.toString());
+		});
+
+		const asmGen = new AssamblyGenerator();
+		opList.forEach(op => op.accept(asmGen));
+
+		const asmGenerator = new AssamblyBuilder();
+		const asmStr = asmGenerator.generateAssambly(asmGen.opStringList);
+		console.log(asmStr);
+
+		const fasmCompiler = new FASMCompiler();
+		fasmCompiler.compile(asmStr, './out.exe');
 
 		console.log("OUTPUT:");
 		const interpreter = new Interpreter();

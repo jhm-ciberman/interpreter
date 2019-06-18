@@ -1,7 +1,7 @@
-import Scope from "./Scope";
+import Scope from "../symbols/Scope";
 import ASTBlock from "../ast/statements/ASTBlock";
-import Type from "./Type";
-import Symbol from "./Symbol";
+import Type from "../symbols/Type";
+import Symbol from "../symbols/SymbolElement";
 import TypeInferenceError from "./exceptions/TypeInferenceError";
 import ASTVarDec from "../ast/statements/ASTVarDec";
 import TypeAsignationError from "./exceptions/TypeAsignationError";
@@ -20,7 +20,6 @@ import ASTAddition from "../ast/expressions/binop/ASTAddition";
 import ASTDivision from "../ast/expressions/binop/ASTDivision";
 import ASTMultiplication from "../ast/expressions/binop/ASTMultiplication";
 import ASTSubstraction from "../ast/expressions/binop/ASTSubstraction";
-import ASTExpression from "../ast/expressions/ASTExpression";
 
 export default class SemanticAnalyzer implements INodeVisitor {
 	
@@ -40,6 +39,10 @@ export default class SemanticAnalyzer implements INodeVisitor {
 
 	public analyze(program: ASTBlock) {
 		program.accept(this);
+	}
+
+	public get globalScope() {
+		return this._scope;
 	}
 
 	private _typeFor(typeName: string): Type {
@@ -89,7 +92,6 @@ export default class SemanticAnalyzer implements INodeVisitor {
 		node.value.accept(this);
 		return node.value.type || this.TYPE_VOID;		
 	}
-
 
 	public visitIf(node: ASTIf): void {
 		node.condition.accept(this)

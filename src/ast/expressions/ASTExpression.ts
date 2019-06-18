@@ -1,10 +1,13 @@
 import ASTStatement from "../statements/ASTStatement";
-import Type from "../../semantic/Type";
+import Type from "../../symbols/Type";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
+import SymbolElement from "../../symbols/SymbolElement";
 
 export default abstract class ASTExpression extends ASTStatement {
 
 	private _type: Type | undefined = undefined;
+
+	private _temp: SymbolElement | undefined = undefined;
 
 	public execute(interpreter: INodeInterpreter): void {
 		this.resolveValue(interpreter);
@@ -21,5 +24,16 @@ export default abstract class ASTExpression extends ASTStatement {
 			throw new Error('Undefined type');
 		}
 		return this._type;
+	}
+
+	public set temp(value: SymbolElement) {
+		this._temp = value;
+	}
+
+	public get temp(): SymbolElement {
+		if (!this._temp) {
+			throw new Error('Undefined temporary variable');
+		}
+		return this._temp;
 	}
 }

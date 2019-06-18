@@ -1,10 +1,10 @@
-import SymbolTable from "../../SymbolTable";
+import SymbolTable from "../../symbols/SymbolTable";
 
 export default class Context {
 
 	public readonly parent: Context | null;
 
-	private _vars: SymbolTable<any> = new SymbolTable();
+	private _vars: SymbolTable<string, any> = new SymbolTable();
 
 	constructor(parent: Context | null = null) {
 		this.parent = parent;

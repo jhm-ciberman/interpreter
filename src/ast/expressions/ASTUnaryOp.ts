@@ -1,6 +1,6 @@
 import ASTExpression from "./ASTExpression";
 import UnaryOpType from "./UnaryOpType";
-import Type from "../../semantic/Type";
+import Type from "../../symbols/Type";
 import INodeVisitor from "../../INodeVisitor";
 import INodeInterpreter from "../../output/interpreter/INodeInterpreter";
 

@@ -1,5 +1,5 @@
 import ASTVarDec from "../../ast/statements/ASTVarDec";
-import Type from "../Type";
+import Type from "../../symbols/Type";
 import SemanticError from "./SemanticError";
 
 export default class TypeAsignationError extends SemanticError {

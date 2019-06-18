@@ -1,14 +1,14 @@
-export default class SymbolTable<V> {
+export default class SymbolTable<K, V> {
 
-	private readonly _parent: SymbolTable<V> | null;
+	private readonly _parent: SymbolTable<K, V> | null;
 
-	private readonly _symbols: Map<string, V> = new Map();
+	private readonly _symbols: Map<K, V> = new Map();
 
-	constructor(parent: SymbolTable<V> | null = null) {
+	constructor(parent: SymbolTable<K, V> | null = null) {
 		this._parent = parent;
 	}
 
-	public lookup(name: string, recursive = false): V | undefined {
+	public lookup(name: K, recursive = false): V | undefined {
 		const s = this._symbols.get(name);
 		if (s !== undefined) {
 			return s;
@@ -21,7 +21,7 @@ export default class SymbolTable<V> {
 		}
 	}
 
-	public insert(name: string, value: V): void {
+	public insert(name: K, value: V): void {
 		this._symbols.set(name, value);
 	}
 	
